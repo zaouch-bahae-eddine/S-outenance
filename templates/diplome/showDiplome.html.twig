@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Diplome{% endblock %}
+
+{% block body %}
+    <h1>Ajouter diplome</h1>
+
+    {{ form_start(diplomeForm, {'action': path('diplome_add'), 'method': 'POST'}) }}
+    {{ form_widget(diplomeForm) }}
+    <button type="submit">Ajouter</button>
+    {{ form_end(diplomeForm) }}
+
+    <h1>Modifier diplome</h1>
+
+    {{ form_start(diplomeFormSet, {'action': path('diplome_add_set',{'id': idDiplome}), 'method': 'POST'}) }}
+    {{ form_widget(diplomeFormSet) }}
+    <button type="submit">Modifier</button>
+    {{ form_end(diplomeFormSet) }}
+
+    <h1>Diplome</h1>
+    <ul>
+        {% for diplome in diplomes %}
+            <li>
+                {{ diplome.nom }}
+                <a href="{{ path('diplome_set',{'id': diplome.id}) }}">editer</a>
+                <a href="{{ path('diplome_remove',{'id': diplome.id}) }}">remove</a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+
+{% endblock %}

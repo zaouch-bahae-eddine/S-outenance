@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modules{% endblock %}
+
+{% block body %}
+    <h1>Ajouter module</h1>
+
+    {{ form_start(moduleForm, {'action': path('module_add'), 'method': 'POST'}) }}
+    {{ form_widget(moduleForm) }}
+    <button type="submit">Ajouter</button>
+    {{ form_end(moduleForm) }}
+
+    <h1>Modifier module</h1>
+
+    {{ form_start(moduleFormSet, {'action': path('module_add_set',{'id': idModule}), 'method': 'POST'}) }}
+    {{ form_widget(moduleFormSet) }}
+    <button type="submit">Modifier</button>
+    {{ form_end(moduleFormSet) }}
+
+    <h1>Modules</h1>
+    <ul>
+        {% for module in modules %}
+            <li>
+                {{ module.nom }} {{ module.filiere.diplome.nom }} {{ module.filiere.nom }} {{ module.filiere.annee }}
+                <a href="{{ path('module_set',{'id': module.id}) }}">editer</a>
+                <a href="{{ path('module_remove',{'id': module.id}) }}">remove</a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello EtudiantController!{% endblock %}
+
+{% block body %}
+    <a href="{{ path('etudiant_generate') }}">Générer compte</a>
+    <h1>Ajouter etudiant</h1>
+    {{ form_start(etudiantForm, {'action': path('etudiant_add'), 'method': 'POST'}) }}
+        {{ form_row(etudiantForm.nom) }}
+        {{ form_row(etudiantForm.prenom) }}
+        {{ form_row(etudiantForm.mailPerso) }}
+        {{ form_row(etudiantForm.filiere) }}
+
+        <button type="submit">Ajouter</button>
+    {{ form_end(etudiantForm) }}
+
+    <h1>Modifier etudiant</h1>
+    {{ form_start(etudiantFormSet, {'action': path('etudiant_add_set', {'id': idEtudiant}), 'method': 'POST'}) }}
+        {{ form_row(etudiantFormSet.nom) }}
+        {{ form_row(etudiantFormSet.prenom) }}
+        {{ form_row(etudiantFormSet.mailPerso) }}
+        {{ form_row(etudiantFormSet.filiere) }}
+
+        <button type="submit">Modifier</button>
+    {{ form_end(etudiantFormSet) }}
+
+    <h1>Etudiants</h1>
+    {% for etudiant in etudiants %}
+        <div>
+            {{ etudiant.compte.nom }} {{ etudiant.compte.prenom }} {{ etudiant.filiere.diplome.nom }} {{ etudiant.filiere.nom }} {{ etudiant.filiere.annee }}
+            <a href="{{ path('etudiant_set', {'id': etudiant.id}) }}">edit</a>
+            <a href="">remove</a>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+{% endblock %}

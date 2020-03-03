@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello SoutenanceController!{% endblock %}
+
+{% block body %}
+<h1>Welcome home</h1>
+
+    {% if is_granted('ROLE_USER') %}
+        <a href="{{ path('logout') }}">se déconnecter</a>
+    {% else %}
+        <a href="{{ path('show_login') }}">login</a>
+    {% endif %}
+{% endblock %}

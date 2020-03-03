@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello FiliereController!{% endblock %}
+
+{% block body %}
+    <h1>Ajouter filière</h1>
+
+    {{ form_start(filiereForm, {'action': path('filiere_add'), 'method': 'POST'}) }}
+    {{ form_widget(filiereForm) }}
+    <button type="submit">Ajouter</button>
+    {{ form_end(filiereForm) }}
+
+    <h1>Modifier filière</h1>
+
+    {{ form_start(filiereFormSet, {'action': path('filiere_add_set',{'id': idFiliere}), 'method': 'POST'}) }}
+    {{ form_widget(filiereFormSet) }}
+    <button type="submit">Modifier</button>
+    {{ form_end(filiereFormSet) }}
+
+    <h1>Filière</h1>
+    <ul>
+        {% for filiere in filieres %}
+            <li>
+                {{ filiere.nom }} {{ filiere.annee }} Diplome: {{ filiere.diplome.nom }}
+                <a href="{{ path('filiere_set',{'id': filiere.id}) }}">editer</a>
+                <a href="{{ path('filiere_remove',{'id': filiere.id}) }}">remove</a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% for message in app.flashes('success') %}
+    <div class="alert alert-success">
+        {{ message }}
+    </div>
+
+    {% endfor %}
+
+{% endblock %}

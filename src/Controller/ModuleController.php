@@ -45,12 +45,14 @@ class ModuleController extends AbstractController
                 'moduleForm' => $formVide->createView(),
                 'moduleFormSet' =>$form->createView(),
                 'idModule' => 0,
+                'setModel' => false
             ]);
         return $this->render('module/showModule.html.twig', [
             'modules' => $modules,
             'moduleForm' => $formVide->createView(),
             'moduleFormSet' =>$form->createView(),
             'idModule' => $module->getId(),
+            'setModel' => true
         ]);
 
     }

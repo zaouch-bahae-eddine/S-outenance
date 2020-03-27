@@ -2,7 +2,7 @@
 
 {% block title %}Modules{% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>Ajouter module</h1>
 
     {{ form_start(moduleForm, {'action': path('module_add'), 'method': 'POST'}) }}
@@ -17,16 +17,67 @@
     <button type="submit">Modifier</button>
     {{ form_end(moduleFormSet) }}
 
-    <h1>Modules</h1>
-    <ul>
-        {% for module in modules %}
-            <li>
-                {{ module.nom }} {{ module.filiere.diplome.nom }} {{ module.filiere.nom }} {{ module.filiere.annee }}
-                <a href="{{ path('module_set',{'id': module.id}) }}">editer</a>
-                <a href="{{ path('module_remove',{'id': module.id}) }}">remove</a>
-            </li>
-        {% endfor %}
-    </ul>
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Gestion Modules</h1>
+
+        <!-- DataTales Example -->
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Diplôme</th>
+                            <th>Année</th>
+                            <th>Modifier</th>
+                            <th>Supprimer</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Diplôme</th>
+                            <th>Filière</th>
+                            <th>Année</th>
+                            <th>Modifier</th>
+                            <th>Supprimer</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+
+
+                        {% for module in modules %}
+                            <tr>
+                                <td>{{ module.nom }}</td>
+                                <td>{{ module.filiere.diplome.nom }}</td>
+                                <td>{{ module.filiere.nom }}</td>
+                                <td>{{ module.filiere.annee }}</td>
+
+                                <td>
+                                    <a href="{{ path('module_set',{'id': module.id}) }}">editer</a>
+                                </td>
+                                <td>
+                                    <a href="{{ path('module_remove',{'id': module.id}) }}">remove</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
             {{ message }}

@@ -27,10 +27,8 @@
                   </div>
                       {{ form_start(loginForm, {'attr': {'class': 'user'}}) }}
         {% if error %}
-            <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
-        <span>admin@admin.sou</span><br/>
-        <span>admin</span>
         <div class="form-group">
             {{ form_row(loginForm.email, {'value': last_username ,'attr': {'class': 'form-control form-control-user'} }) }}
         </div>
@@ -57,15 +55,6 @@
 
   </div>
 
-  <!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-  <!-- Custom scripts for all pages-->
-  <script src="js/sb-admin-2.min.js"></script>
-
+{% block jsTable %}{% endblock %}
 </body>
 {% endblock %}

@@ -1,14 +1,11 @@
 {% extends 'base.html.twig' %}
+
+{% block title %}Hello CompteController!{% endblock %}
 {% block stylesheets %}
  {{ parent() }}
 {% endblock %}
-{% block title %}Hello CompteController!{% endblock %}
 
-{% block body %}
-{{ parent() }}
-	{% block pageTop %}
-		 {{ parent() }}
-	{% endblock %}
-    <h1>Mon compte</h1>
-    <h2>{{ app.user.email }}</h2>
+{% block content %}
+<h1>account</h1>
+
 {% endblock %}

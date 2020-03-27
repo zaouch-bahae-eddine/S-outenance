@@ -2,7 +2,7 @@
 
 {% block title %}Hello FiliereController!{% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>Ajouter filière</h1>
 
     {{ form_start(filiereForm, {'action': path('filiere_add'), 'method': 'POST'}) }}
@@ -17,16 +17,63 @@
     <button type="submit">Modifier</button>
     {{ form_end(filiereFormSet) }}
 
-    <h1>Filière</h1>
-    <ul>
-        {% for filiere in filieres %}
-            <li>
-                {{ filiere.nom }} {{ filiere.annee }} Diplome: {{ filiere.diplome.nom }}
-                <a href="{{ path('filiere_set',{'id': filiere.id}) }}">editer</a>
-                <a href="{{ path('filiere_remove',{'id': filiere.id}) }}">remove</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Gestion Filière</h1>
+
+        <!-- DataTales Example -->
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Diplôme</th>
+                            <th>Année</th>
+                            <th>Modifier</th>
+                            <th>Supprimer</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Diplôme</th>
+                            <th>Année</th>
+                            <th>Modifier</th>
+                            <th>Supprimer</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for filiere in filieres %}
+                            <tr>
+                                <td>{{ filiere.nom }}</td>
+                                <td>{{ filiere.diplome.nom }}</td>
+                                <td>{{ filiere.annee }}</td>
+
+                                <td>
+                                    <a href="{{ path('filiere_set',{'id': filiere.id}) }}">editer</a>
+                                </td>
+                                <td>
+                                    <a href="{{ path('filiere_remove',{'id': filiere.id}) }}">remove</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
     {% for message in app.flashes('success') %}
     <div class="alert alert-success">
         {{ message }}

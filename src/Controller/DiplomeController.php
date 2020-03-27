@@ -47,12 +47,14 @@ class DiplomeController extends AbstractController
                 'diplomeForm' => $formVide->createView(),
                 'diplomeFormSet' =>$form->createView(),
                 'idDiplome' => 0,
+                'setModel' => false
             ]);
         return $this->render('diplome/showDiplome.html.twig', [
             'diplomes' => $diplomes,
             'diplomeForm' => $formVide->createView(),
             'diplomeFormSet' =>$form->createView(),
             'idDiplome' => $diplome->getId(),
+            'setModel' => true
         ]);
 
     }

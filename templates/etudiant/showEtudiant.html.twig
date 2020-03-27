@@ -2,36 +2,160 @@
 
 {% block title %}Hello EtudiantController!{% endblock %}
 
-{% block body %}
-    <a href="{{ path('etudiant_generate') }}">Générer compte</a>
-    <h1>Ajouter etudiant</h1>
-    {{ form_start(etudiantForm, {'action': path('etudiant_add'), 'method': 'POST'}) }}
-        {{ form_row(etudiantForm.nom) }}
-        {{ form_row(etudiantForm.prenom) }}
-        {{ form_row(etudiantForm.mailPerso) }}
-        {{ form_row(etudiantForm.filiere) }}
-
-        <button type="submit">Ajouter</button>
-    {{ form_end(etudiantForm) }}
-
-    <h1>Modifier etudiant</h1>
-    {{ form_start(etudiantFormSet, {'action': path('etudiant_add_set', {'id': idEtudiant}), 'method': 'POST'}) }}
-        {{ form_row(etudiantFormSet.nom) }}
-        {{ form_row(etudiantFormSet.prenom) }}
-        {{ form_row(etudiantFormSet.mailPerso) }}
-        {{ form_row(etudiantFormSet.filiere) }}
-
-        <button type="submit">Modifier</button>
-    {{ form_end(etudiantFormSet) }}
-
-    <h1>Etudiants</h1>
-    {% for etudiant in etudiants %}
-        <div>
-            {{ etudiant.compte.nom }} {{ etudiant.compte.prenom }} {{ etudiant.filiere.diplome.nom }} {{ etudiant.filiere.nom }} {{ etudiant.filiere.annee }}
-            <a href="{{ path('etudiant_set', {'id': etudiant.id}) }}">edit</a>
-            <a href="">remove</a>
+{% block content %}
+    <!-- Modal Génération des comptes-->
+    <div class="modal fade" id="generateCompteModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Suffix des address mails</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(suffixForm, {'action': path('etudiant_generate'), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_row(suffixForm.Suffix) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Générer</button>
+                </div>
+                {{ form_end(suffixForm) }}
+            </div>
         </div>
-    {% endfor %}
+    </div>
+    <!--Modal Génération des comptes -->
+
+    <!-- Modal Ajouter Etudiant-->
+    <div class="modal fade" id="addModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Ajouter etudiant</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(etudiantForm, {'action': path('etudiant_add'), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_row(etudiantForm.nom) }}
+                    {{ form_row(etudiantForm.prenom) }}
+                    {{ form_row(etudiantForm.mailPerso) }}
+                    {{ form_row(etudiantForm.filiere) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+                {{ form_end(etudiantForm) }}
+            </div>
+        </div>
+    </div>
+    <!--Modal Ajouter Etudiant-->
+
+    <!-- Modal modifier Etudiant-->
+    <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Modifier etudiant</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(etudiantFormSet, {'action': path('etudiant_add_set', {'id': idEtudiant}), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_row(etudiantFormSet.nom) }}
+                    {{ form_row(etudiantFormSet.prenom) }}
+                    {{ form_row(etudiantFormSet.mailPerso) }}
+                    {{ form_row(etudiantFormSet.email ) }}
+                    {{ form_row(etudiantFormSet.filiere) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </div>
+                {{ form_end(etudiantFormSet) }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Gestion Etudiants</h1>
+
+        <!-- DataTales Example -->
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#generateCompteModele">
+                    Générer compte
+                </button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
+                    Nouveau etudiant
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Mail personnel</th>
+                            <th>Mail université</th>
+                            <th>Diplôme</th>
+                            <th>Filiére</th>
+                            <th>Année</th>
+                            <th>Modifier</th>
+                            <th>Supprimer</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Mail personnel</th>
+                            <th>Mail université</th>
+                            <th>Diplôme</th>
+                            <th>Filiére</th>
+                            <th>Année</th>
+                            <th>Modifier</th>
+                            <th>Supprimer</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for etudiant in etudiants %}
+                            <tr>
+                                <td>{{ etudiant.compte.nom }}</td>
+                                <td>{{ etudiant.compte.prenom }}</td>
+                                <td>{{ etudiant.compte.mailPerso }}</td>
+                                <td>{{ etudiant.compte.email }}</td>
+                                <td>{{ etudiant.filiere.diplome.nom }}</td>
+                                <td>{{ etudiant.filiere.nom }}</td>
+                                <td>{{ etudiant.filiere.annee }}</td>
+
+                                <td>
+                                    <a href="{{ path('etudiant_set', {'id': etudiant.id}) }}">edit</a>
+                                </td>
+                                <td>
+                                    <a href="{{ path('etudiant_remove', {'id': etudiant.id}) }}">remove</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
             {{ message }}
@@ -39,3 +163,12 @@
 
     {% endfor %}
 {% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {% if setModel == true%}
+            <script>
+                const $=jQuery;
+                $('#setModele').modal('show');
+            </script>
+        {% endif %}
+    {% endblock %}

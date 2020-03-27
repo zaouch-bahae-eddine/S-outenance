@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Salle{% endblock %}
+
+{% block content %}
+    <h1>Ajouter salle</h1>
+
+    {{ form_start(salleForm, {'action': path('salle_add'), 'method': 'POST'}) }}
+    {{ form_widget(salleForm) }}
+    <button type="submit">Ajouter</button>
+    {{ form_end(salleForm) }}
+
+    <h1>Modifier salle</h1>
+
+    {{ form_start(salleFormSet, {'action': path('salle_add_set',{'id': idSalle}), 'method': 'POST'}) }}
+    {{ form_widget(salleFormSet) }}
+    <button type="submit">Modifier</button>
+    {{ form_end(salleFormSet) }}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Gestion Salles</h1>
+
+    <!-- DataTales Example -->
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Diplôme</th>
+                        <th>Année</th>
+                        <th>Modifier</th>
+                        <th>Supprimer</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Etage</th>
+                        <th>Capacite</th>
+                        <th>Modifier</th>
+                        <th>Supprimer</th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+
+                    {% for salle in salles %}
+                        <tr>
+                            <td>{{ salle.nom }} </td>
+                            <td>{{ salle.etage }}</td>
+                            <td>{{ salle.capacite }}</td>
+
+                            <td>
+                                <a href="{{ path('salle_set',{'id': salle.id}) }}">editer</a>
+                            </td>
+                            <td>
+                                <a href="{{ path('salle_remove',{'id': salle.id}) }}">remove</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+
+{% endblock %}

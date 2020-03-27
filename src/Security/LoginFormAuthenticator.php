@@ -71,10 +71,12 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
         //we must some some logic to redirect user to his specific page
+
         if($targetgetPath = $this->getTargetPath($request->getSession(), $providerKey)){
             // Test if string contains the word logout
             if(strpos($targetgetPath, "/logout") == false)
                 return new RedirectResponse($targetgetPath);
+            else new RedirectResponse($this->router->generate('show_login'));
         }
         return new RedirectResponse($this->router->generate('home_page'));
     }

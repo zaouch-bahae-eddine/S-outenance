@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Form;
 
 use App\Entity\Filiere;
@@ -12,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EtudiantFormType extends AbstractType
+class ProfFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -29,7 +28,8 @@ class EtudiantFormType extends AbstractType
                 'class' => Filiere::class,
                 'choice_label' => function(Filiere $filiere){
                     return sprintf("%s %s %s", $filiere->getDiplome()->getNom(), $filiere->getNom(), $filiere->getAnnee());
-                }
+                },
+                'multiple' => true,
             ]);
     }
 

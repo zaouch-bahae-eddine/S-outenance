@@ -45,12 +45,14 @@ class FiliereController extends AbstractController
                 'filiereForm' => $formVide->createView(),
                 'filiereFormSet' =>$form->createView(),
                 'idFiliere' => 0,
+                'setModel' => false
             ]);
             return $this->render('filiere/showFiliere.html.twig', [
                 'filieres' => $filieres,
                 'filiereForm' => $formVide->createView(),
                 'filiereFormSet' =>$form->createView(),
                 'idFiliere' => $filiere->getId(),
+            'setModel' => true
             ]);
 
     }

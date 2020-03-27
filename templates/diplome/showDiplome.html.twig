@@ -2,31 +2,111 @@
 
 {% block title %}Diplome{% endblock %}
 
-{% block body %}
-    <h1>Ajouter diplome</h1>
+{% block content %}
 
-    {{ form_start(diplomeForm, {'action': path('diplome_add'), 'method': 'POST'}) }}
-    {{ form_widget(diplomeForm) }}
-    <button type="submit">Ajouter</button>
-    {{ form_end(diplomeForm) }}
+    <!-- Modal -->
+    <div class="modal fade" id="addModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Ajouter diplome</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(diplomeForm, {'action': path('diplome_add'), 'method': 'POST'}) }}
+                    <div class="modal-body">
+                         {{ form_widget(diplomeForm) }}
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+                {{ form_end(diplomeForm) }}
+            </div>
+        </div>
+    </div>
+    <!--Modal -->
+    <!-- Modal -->
+    <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
 
-    <h1>Modifier diplome</h1>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="setModalLongTitle">Modifier diplôme</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(diplomeFormSet, {'action': path('diplome_add_set',{'id': idDiplome}), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_widget(diplomeFormSet) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </div>
+                {{ form_end(diplomeFormSet) }}
+            </div>
+        </div>
+    </div>
+    <!--Modal -->
 
-    {{ form_start(diplomeFormSet, {'action': path('diplome_add_set',{'id': idDiplome}), 'method': 'POST'}) }}
-    {{ form_widget(diplomeFormSet) }}
-    <button type="submit">Modifier</button>
-    {{ form_end(diplomeFormSet) }}
 
-    <h1>Diplome</h1>
-    <ul>
-        {% for diplome in diplomes %}
-            <li>
-                {{ diplome.nom }}
-                <a href="{{ path('diplome_set',{'id': diplome.id}) }}">editer</a>
-                <a href="{{ path('diplome_remove',{'id': diplome.id}) }}">remove</a>
-            </li>
-        {% endfor %}
-    </ul>
+
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Gestion Diplôme</h1>
+
+        <!-- DataTales Example -->
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
+                    Nouveau diplôme
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Libellé</th>
+                            <th>Modifier</th>
+                            <th>Supprimer</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>Libellé</th>
+                            <th>Modifer</th>
+                            <th>Supprimer</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for diplome in diplomes %}
+                            <tr>
+                                <td>{{ diplome.nom }}</td>
+                                <td>
+                                    <a href="{{ path('diplome_set',{'id': diplome.id}) }}">editer</a>
+                                </td>
+                                <td>
+                                    <a href="{{ path('diplome_remove',{'id': diplome.id}) }}">remove</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
             {{ message }}
@@ -35,3 +115,13 @@
     {% endfor %}
 
 {% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        {% if setModel == true%}
+            <script>
+                const $=jQuery;
+                $('#setModele').modal('show');
+            </script>
+        {% endif %}
+    {% endblock %}

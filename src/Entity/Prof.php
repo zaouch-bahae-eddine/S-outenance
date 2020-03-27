@@ -151,4 +151,7 @@ class Prof
 
         return $this;
     }
+    public function removeAllFiliere(){
+        $this->filieres = null;
+    }
 }

@@ -4,33 +4,85 @@
 
 {% block content %}
 
-    {{ form_start(suffixForm, {'action': path('prof_generate'), 'method': 'POST'}) }}
-    {{ form_row(suffixForm.Suffix) }}
-    <button type="submit">Générer comptes</button>
-    {{ form_end(suffixForm) }}
+    <!-- Modal Génération des comptes-->
+    <div class="modal fade" id="generateCompteModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Suffix des address mails</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(suffixForm, {'action': path('prof_generate'), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_row(suffixForm.Suffix) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Générer</button>
+                </div>
+                {{ form_end(suffixForm) }}
+            </div>
+        </div>
+    </div>
+    <!--Modal Génération des comptes -->
 
-    <a href="{{ path('prof_generate') }}">Générer compte</a>
-    <h1>Ajouter Enseignant</h1>
-    {{ form_start(profForm, {'action': path('prof_add'), 'method': 'POST'}) }}
-    {{ form_row(profForm.nom) }}
-    {{ form_row(profForm.prenom) }}
-    {{ form_row(profForm.mailPerso) }}
-    {{ form_row(profForm.filiere) }}
+    <!-- Modal Ajouter Etudiant-->
+    <div class="modal fade" id="addModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Ajouter enseignant</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(profForm, {'action': path('prof_add'), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_row(profForm.nom) }}
+                    {{ form_row(profForm.prenom) }}
+                    {{ form_row(profForm.mailPerso) }}
+                    {{ form_row(profForm.filiere) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+                {{ form_end(profForm) }}
+            </div>
+        </div>
+    </div>
+    <!--Modal Ajouter Etudiant-->
 
-    <button type="submit">Ajouter</button>
-    {{ form_end(profForm) }}
+    <!-- Modal modifier Etudiant-->
+    <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Modifier enseignant</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(profFormSet, {'action': path('prof_add_set', {'id': idProf}), 'method': 'POST'}) }}
 
-    <h1>Modifier Enseignant</h1>
-    {{ form_start(profFormSet, {'action': path('prof_add_set', {'id': idProf}), 'method': 'POST'}) }}
-    {{ form_row(profFormSet.nom) }}
-    {{ form_row(profFormSet.prenom) }}
-    {{ form_row(profFormSet.mailPerso) }}
-    {{ form_row(profFormSet.email ) }}
-    {{ form_row(profFormSet.filiere) }}
-
-    <button type="submit">Modifier</button>
-    {{ form_end(profFormSet) }}
-
+                <div class="modal-body">
+                    {{ form_row(profFormSet.nom) }}
+                    {{ form_row(profFormSet.prenom) }}
+                    {{ form_row(profFormSet.mailPerso) }}
+                    {{ form_row(profFormSet.email ) }}
+                    {{ form_row(profFormSet.filiere) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </div>
+                {{ form_end(profFormSet) }}
+            </div>
+        </div>
+    </div>
+    <!-- Modal modifier Etudiant-->
 
     <!-- Begin Page Content -->
     <div class="container-fluid">
@@ -42,7 +94,13 @@
 
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#generateCompteModele">
+                    Générer compte
+                </button>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
+                    Nouveau enseignant
+                </button>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

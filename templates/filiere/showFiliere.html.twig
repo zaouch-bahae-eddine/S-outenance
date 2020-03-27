@@ -3,19 +3,54 @@
 {% block title %}Hello FiliereController!{% endblock %}
 
 {% block content %}
-    <h1>Ajouter filière</h1>
 
-    {{ form_start(filiereForm, {'action': path('filiere_add'), 'method': 'POST'}) }}
-    {{ form_widget(filiereForm) }}
-    <button type="submit">Ajouter</button>
-    {{ form_end(filiereForm) }}
+        <!-- Modal Ajouter Filière-->
+        <div class="modal fade" id="addModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addModalLongTitle">Ajouter filière</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {{ form_start(filiereForm, {'action': path('filiere_add'), 'method': 'POST'}) }}
+                    <div class="modal-body">
+                        {{ form_widget(filiereForm) }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+                {{ form_end(filiereForm) }}
+            </div>
+        </div>
+    </div>
+    <!--Modal Ajouter Filière-->
 
-    <h1>Modifier filière</h1>
-
-    {{ form_start(filiereFormSet, {'action': path('filiere_add_set',{'id': idFiliere}), 'method': 'POST'}) }}
-    {{ form_widget(filiereFormSet) }}
-    <button type="submit">Modifier</button>
-    {{ form_end(filiereFormSet) }}
+    <!-- Modal modifier Filière-->
+    <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Modifier filière</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(filiereFormSet, {'action': path('filiere_add_set',{'id': idFiliere}), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_widget(filiereFormSet) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </div>
+                {{ form_end(filiereFormSet) }}
+            </div>
+        </div>
+    </div>
+    <!-- Modal modifier Filière-->
 
     <!-- Begin Page Content -->
     <div class="container-fluid">
@@ -27,7 +62,10 @@
 
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
+                    Nouveau filière
+                </button>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -82,3 +120,12 @@
     {% endfor %}
 
 {% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {% if setModel == true%}
+            <script>
+                const $=jQuery;
+                $('#setModele').modal('show');
+            </script>
+        {% endif %}
+    {% endblock %}

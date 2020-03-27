@@ -3,19 +3,53 @@
 {% block title %}Salle{% endblock %}
 
 {% block content %}
-    <h1>Ajouter salle</h1>
 
-    {{ form_start(salleForm, {'action': path('salle_add'), 'method': 'POST'}) }}
-    {{ form_widget(salleForm) }}
-    <button type="submit">Ajouter</button>
-    {{ form_end(salleForm) }}
+<!-- Modal Ajouter Filière-->
+<div class="modal fade" id="addModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLongTitle">Ajouter salle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{ form_start(salleForm, {'action': path('salle_add'), 'method': 'POST'}) }}
+            <div class="modal-body">
+                {{ form_widget(salleForm) }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
+            {{ form_end(salleForm) }}
+        </div>
+    </div>
+</div>
+<!--Modal Ajouter Filière-->
 
-    <h1>Modifier salle</h1>
-
-    {{ form_start(salleFormSet, {'action': path('salle_add_set',{'id': idSalle}), 'method': 'POST'}) }}
-    {{ form_widget(salleFormSet) }}
-    <button type="submit">Modifier</button>
-    {{ form_end(salleFormSet) }}
+<!-- Modal modifier Filière-->
+<div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLongTitle">Modifier salle</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{ form_start(salleFormSet, {'action': path('salle_add_set',{'id': idSalle}), 'method': 'POST'}) }}
+            <div class="modal-body">
+                {{ form_widget(salleFormSet) }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <button type="submit" class="btn btn-primary">Modifier</button>
+            </div>
+            {{ form_end(salleFormSet) }}
+        </div>
+    </div>
+</div>
 
 <!-- Begin Page Content -->
 <div class="container-fluid">
@@ -27,7 +61,9 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
+                Nouveau salle
+            </button>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -35,8 +71,8 @@
                     <thead>
                     <tr>
                         <th>Nom</th>
-                        <th>Diplôme</th>
-                        <th>Année</th>
+                        <th>Etage</th>
+                        <th>Capacite</th>
                         <th>Modifier</th>
                         <th>Supprimer</th>
                     </tr>
@@ -73,7 +109,7 @@
     </div>
 
 </div>
-<!-- /.container-fluid
+<!-- /.container-fluid-->
     {% for message in app.flashes('success') %}
         <div class="alert alert-success">
             {{ message }}
@@ -82,3 +118,12 @@
     {% endfor %}
 
 {% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {% if setModel == true%}
+            <script>
+                const $=jQuery;
+                $('#setModele').modal('show');
+            </script>
+        {% endif %}
+    {% endblock %}

@@ -3,19 +3,56 @@
 {% block title %}Modules{% endblock %}
 
 {% block content %}
-    <h1>Ajouter module</h1>
 
-    {{ form_start(moduleForm, {'action': path('module_add'), 'method': 'POST'}) }}
-    {{ form_widget(moduleForm) }}
-    <button type="submit">Ajouter</button>
-    {{ form_end(moduleForm) }}
+    <!-- Modal Ajouter Filière-->
+    <div class="modal fade" id="addModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Ajouter module</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(moduleForm, {'action': path('module_add'), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_widget(moduleForm) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+                {{ form_end(moduleForm) }}
+            </div>
+        </div>
+    </div>
+    <!--Modal Ajouter Filière-->
 
-    <h1>Modifier module</h1>
+    <!-- Modal modifier Filière-->
+    <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Modifier module</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(moduleFormSet, {'action': path('module_add_set',{'id': idModule}), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_widget(moduleFormSet) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </div>
+                {{ form_end(moduleFormSet) }}
+            </div>
+        </div>
+    </div>
+        <!-- Modal modifier Filière-->
 
-    {{ form_start(moduleFormSet, {'action': path('module_add_set',{'id': idModule}), 'method': 'POST'}) }}
-    {{ form_widget(moduleFormSet) }}
-    <button type="submit">Modifier</button>
-    {{ form_end(moduleFormSet) }}
+
 
 
     <!-- Begin Page Content -->
@@ -28,7 +65,9 @@
 
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
+                    Nouveau module
+                </button>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -37,6 +76,7 @@
                         <tr>
                             <th>Nom</th>
                             <th>Diplôme</th>
+                            <th>Filière</th>
                             <th>Année</th>
                             <th>Modifier</th>
                             <th>Supprimer</th>
@@ -86,3 +126,12 @@
     {% endfor %}
 
 {% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {% if setModel == true%}
+            <script>
+                const $=jQuery;
+                $('#setModele').modal('show');
+            </script>
+        {% endif %}
+    {% endblock %}

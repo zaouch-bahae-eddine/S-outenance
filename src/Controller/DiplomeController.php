@@ -33,7 +33,7 @@ class DiplomeController extends AbstractController
     }
     /**
      * @Route("/diplome", name="diplome_show")
-     *  @Route("/diplome/set/{id}", name="diplome_set")
+     * @Route("/diplome/set/{id}", name="diplome_set")
      */
     public function showDiplomeAction(Diplome $diplome = null)
     {

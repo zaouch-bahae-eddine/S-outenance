@@ -3,12 +3,12 @@
 {% block title %}Hello SoutenanceController!{% endblock %}
 
 
-{% block content %}
-    <h1>Welcome home</h1>
+    {% block content %}
+        {% if is_granted('ROLE_ADMIN') %}
+            <h1>Welcome home Admin</h1>
+        {% endif %}
+        {% if is_granted('ROLE_PROF') %}
+            <h1>Welcome home Prof</h1>
+        {% endif %}
+    {% endblock %}
 
-    {% if is_granted('ROLE_USER') %}
-        <a href="{{ path('logout') }}">se déconnecter</a>
-    {% else %}
-        <a href="{{ path('show_login') }}">login</a>
-    {% endif %}
-{% endblock %}

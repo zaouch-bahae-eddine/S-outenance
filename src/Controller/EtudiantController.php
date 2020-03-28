@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  * Class EtudiantController
  * @package App\Controller
  * @Route("/admin")
- * @IsGranted("ROLE_ADMIN")
+ * @IsGranted({"ROLE_ADMIN"})
  */
 class EtudiantController extends AbstractController
 {

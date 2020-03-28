@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Soutenance{% endblock %}
+
+{% block content %}
+
+    <!-- Modal Ajouter Filière-->
+    <div class="modal fade" id="addModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Ajouter salle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(soutenanceForm, {'action': path('soutenance_add'), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_widget(soutenanceForm.nom) }}
+                    {{ form_widget(soutenanceForm.alerte) }}
+                    {{ form_widget(soutenanceForm.module) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+                {{ form_end(soutenanceForm) }}
+            </div>
+        </div>
+    </div>
+    <!--Modal Ajouter Filière-->
+
+    <!-- Modal modifier Filière-->
+    <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Modifier salle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(soutenanceFormSet, {'action': path('soutenance_add_set',{'id': idSoutenance}), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_widget(soutenanceFormSet.nom) }}
+                    {{ form_widget(soutenanceFormSet.alerte) }}
+                    {{ form_widget(soutenanceFormSet.module) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </div>
+                {{ form_end(soutenanceFormSet) }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Gestion Soutenance</h1>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
+            Nouveau Soutenance
+        </button>
+
+            {% for soutenance in soutenances %}
+                <div>
+                    {{ soutenance.nom }} {{ soutenance.alerte|date }} {{ soutenance.module.nom }}
+                    <a href="{{ path('soutenance_set', {'id': soutenance.id}) }}">edit</a>
+                </div>
+            {% endfor %}
+
+    </div>
+    <!-- /.container-fluid-->
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {% if setModel == true%}
+            <script>
+                const $=jQuery;
+                $('#setModele').modal('show');
+            </script>
+        {% endif %}
+    {% endblock %}

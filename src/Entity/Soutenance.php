@@ -62,7 +62,6 @@ class Soutenance
 
     public function __construct()
     {
-        $this->profs = new ArrayCollection();
         $this->creneaus = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->rendus = new ArrayCollection();

@@ -168,3 +168,12 @@
 
     {% endfor %}
 {% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {% if setModel == true%}
+            <script>
+                const $=jQuery;
+                $('#setModele').modal('show');
+            </script>
+        {% endif %}
+    {% endblock %}

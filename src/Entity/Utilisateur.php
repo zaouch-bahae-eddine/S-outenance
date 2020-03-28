@@ -169,13 +169,8 @@ class Utilisateur implements UserInterface
         return $this->admin[0];
     }
 
-    public function addAdmin(Admin $admin): self
-    {
-        if (!$this->admin->contains($admin)) {
-            $this->admin[] = $admin;
-            $admin->setCompte($this);
-        }
-
+    public function setAdmin(Admin $admin): self{
+        $this->admin[0] = $admin;
         return $this;
     }
 
@@ -199,14 +194,8 @@ class Utilisateur implements UserInterface
     {
         return $this->prof[0];
     }
-
-    public function addProf(Prof $prof): self
-    {
-        if (!$this->prof->contains($prof)) {
-            $this->prof[] = $prof;
-            $prof->setCompte($this);
-        }
-
+    public function setProf(Prof $prof): self{
+        $this->prof[0] = $prof;
         return $this;
     }
 
@@ -231,13 +220,8 @@ class Utilisateur implements UserInterface
         return $this->etudiant[0];
     }
 
-    public function addEtudiant(Etudiant $etudiant): self
-    {
-        if (!$this->etudiant->contains($etudiant)) {
-            $this->etudiant[] = $etudiant;
-            $etudiant->setCompte($this);
-        }
-
+    public function setEtudiant(Etudiant $etudiant): self{
+        $this->etudiant[0] = $etudiant;
         return $this;
     }
 

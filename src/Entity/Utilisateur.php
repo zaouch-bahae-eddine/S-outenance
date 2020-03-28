@@ -80,7 +80,9 @@ class Utilisateur implements UserInterface
     {
         return $this->email;
     }
-
+    public function setEmailToNull(){
+        $this->email = null;
+    }
     public function setEmail(string $email): self
     {
         $this->email = $email;

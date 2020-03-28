@@ -7,6 +7,7 @@ use App\Entity\Utilisateur;
 use App\Form\EtudiantFormType;
 use App\Form\GenerationMailFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Nullable;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -74,11 +75,12 @@ class EtudiantController extends AbstractController
      */
     public function addEtudiantAction(Request $request, Etudiant $etudiant = null)
     {
-            $form = $this->createForm(EtudiantFormType::class);
+        $form = $this->createForm(EtudiantFormType::class);
         $form->handleRequest($request);
         $user = null;
         if($form->isSubmitted() && $form->isValid() && ($form->getData()->getEmail() == "" || $etudiant != null)){
             if(!$etudiant){
+                $form->getData()->setEmailToNull();
                 $user = $form->getData();
                 $etudiant = new Etudiant();
                 $user->setRoles(["ROLE_ETUDIANT"]);
@@ -90,10 +92,13 @@ class EtudiantController extends AbstractController
             else{
                 $user = $this->em->getRepository(Utilisateur::class)->find($etudiant->getCompte()->getId());
 
+                if($form->getData()->getEmail() != "")
+                    $user->setEmail($form->getData()->getEmail());
+                else
+                    $user->setEmailToNull();
                 $user->setNom($form->getData()->getNom())
                 ->setPrenom($form->getData()->getPrenom())
-                ->setMailPerso($form->getData()->getMailPerso())
-                ->setEmail($form->getData()->getEmail());
+                ->setMailPerso($form->getData()->getMailPerso());
                 $etudiant
                     ->setFiliere($form['filiere']->getData())
                     ->setcompte($user);
@@ -128,7 +133,7 @@ class EtudiantController extends AbstractController
     /**
      * @Route("/etudiant/generation-compte", name="etudiant_generate")
      */
-    public function GenerateCompteEtudiantAction(Request $request, UserPasswordEncoderInterface $encoder){
+    public function GenerateCompteEtudiantAction(Request $request, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer){
         $form = $this->createForm(GenerationMailFormType::class);
         $faker = Faker\Factory::create();
         $form->handleRequest($request);
@@ -138,17 +143,33 @@ class EtudiantController extends AbstractController
             $i = 0;
             foreach($etudiants as $etudiant){
                 if($etudiant->getCompte()->getPassword() == null) {
-                    $etudiant->getCompte()->setEmail('e' . ($i + 1) . '@' . $form->getData()['Suffix'] . '.fr')
-                        ->setPassword($encoder->encodePassword($etudiant->getCompte(), $faker->password));
-                    dump($etudiant->getCompte());
-
+                    $password = $faker->password;
+                    $etudiant->getCompte()->setEmail($etudiant->getCompte()->getPrenom().'.'.$etudiant->getCompte()->getNom(). '@' . $form->getData()['Suffix'] . '.fr')
+                        ->setPassword($encoder->encodePassword($etudiant->getCompte(),$password));
+                    $message = (new \Swift_Message('Compte Soutenance Plate-forme'))
+                        ->setFrom([$etudiant->getCompte()->getEmail() => 'ne-pas-repondre@'.$form->getData()['Suffix'] . '.fr'])
+                        ->setTo($etudiant->getCompte()->getMailPerso())
+                        ->setBody(
+                            $this->renderView(
+                            // templates/emails/registration.html.twig
+                                'email/registration.html.twig',
+                                [
+                                    'nom' => $etudiant->getCompte()->getNom(),
+                                    'prenom' => $etudiant->getCompte()->getPrenom(),
+                                    'mail' => $etudiant->getCompte()->getEmail(),
+                                    'password' => $password,
+                                ]
+                            ),
+                            'text/html'
+                        );
                     $this->em->persist($etudiant->getCompte());
+                    $mailer->send($message);
                     $i++;
                 }
             }
             $this->em->flush();
             if($i>0)
-            $this->addFlash('success', $i.' Comptes a été génerer');
+            $this->addFlash('success', $i.' Comptes a été génerer et envoyer aux adresse mail personelle de chaqu\'un');
         }
         return $this->redirectToRoute('etudiant_show');
     }

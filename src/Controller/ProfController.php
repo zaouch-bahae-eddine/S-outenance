@@ -79,6 +79,7 @@ class ProfController extends AbstractController
         $user = null;
         if($form->isSubmitted() && $form->isValid() && ($form->getData()->getEmail() == "" || $prof != null)){
             if(!$prof){
+                $form->getData()->setEmailToNull();
                 $user = $form->getData();
                 $prof = new Prof();
                 $user->setRoles(["ROLE_PROF"]);
@@ -91,16 +92,18 @@ class ProfController extends AbstractController
             }
             else{
                 $user = $this->em->getRepository(Utilisateur::class)->find($prof->getCompte()->getId());
-
+                if($form->getData()->getEmail() != "")
+                    $user->setEmail($form->getData()->getEmail());
+                else
+                    $user->setEmailToNull();
                 $user->setNom($form->getData()->getNom())
                     ->setPrenom($form->getData()->getPrenom())
-                    ->setMailPerso($form->getData()->getMailPerso())
-                    ->setEmail($form->getData()->getEmail());
+                    ->setMailPerso($form->getData()->getMailPerso());
                 $prof->setcompte($user);
                 $filires = $prof->getFilieres();
-                foreach ($filires as $filire) {
+                foreach ($filires as $filire)
                     $prof->removeFiliere($filire);
-                }
+
                 $filires = $form['filiere']->getData();
                 foreach ($filires as $filire)
                     $prof->addFiliere($filire);
@@ -128,13 +131,13 @@ class ProfController extends AbstractController
 
         $this->em->flush();
 
-        $this->addFlash('success', 'Ensei   gnant supprimé');
+        $this->addFlash('success', 'Enseignant supprimé');
         return $this->redirectToRoute('prof_show');
     }
     /**
      * @Route("/prof/generation-compte", name="prof_generate")
      */
-    public function GenerateCompteProfAction(Request $request, UserPasswordEncoderInterface $encoder){
+    public function GenerateCompteProfAction(Request $request, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer){
         $form = $this->createForm(GenerationMailFormType::class);
         $faker = Faker\Factory::create();
         $form->handleRequest($request);
@@ -143,17 +146,34 @@ class ProfController extends AbstractController
             $i = 0;
             foreach($profs as $prof){
                 if($prof->getCompte()->getPassword() == null) {
+                    $password = $faker->password;
                     $prof->getCompte()->setEmail($prof->getCompte()->getPrenom() .'.'.$prof->getCompte()->getNom().'@'. $form->getData()['Suffix'] . '.fr')
-                        ->setPassword($encoder->encodePassword($prof->getCompte(), $faker->password));
-                    dump($prof->getCompte());
+                        ->setPassword($encoder->encodePassword($prof->getCompte(), $password));
+                    $message = (new \Swift_Message('Compte Soutenance Plate-forme'))
+                        ->setFrom(['ne-pas-repondre@gmail.com' => 'ne-pas-repondre@'.$form->getData()['Suffix'] . '.fr'])
+                        ->setTo($prof->getCompte()->getMailPerso())
+                        ->setBody(
+                            $this->renderView(
+                            // templates/emails/registration.html.twig
+                                'email/registration.html.twig',
+                                [
+                                    'nom' => $prof->getCompte()->getNom(),
+                                    'prenom' => $prof->getCompte()->getPrenom(),
+                                    'mail' => $prof->getCompte()->getEmail(),
+                                    'password' => $password,
+                                ]
+                            ),
+                            'text/html'
+                        );
 
                     $this->em->persist($prof->getCompte());
+                    $mailer->send($message);
                     $i++;
                 }
             }
             $this->em->flush();
             if($i>0)
-                $this->addFlash('success', $i.' Comptes a été génerer');
+                $this->addFlash('success', $i.' Comptes a été génerer Comptes a été génerer et envoyer aux adresse mail personelle de chaqu\'un');
         }
         return $this->redirectToRoute('prof_show');
     }

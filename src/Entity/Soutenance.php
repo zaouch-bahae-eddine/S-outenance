@@ -62,6 +62,7 @@ class Soutenance
 
     public function __construct()
     {
+        $this->evaluateurs = new ArrayCollection();
         $this->creneaus = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->rendus = new ArrayCollection();
@@ -115,22 +116,21 @@ class Soutenance
      */
     public function getEvaluateurs(): Collection
     {
-        return $this->profs;
+        return $this->evaluateurs;
     }
 
-    public function addEvaluateurs(Prof $prof): self
+    public function addEvaluateur(Prof $evaluateur): self
     {
-        if (!$this->profs->contains($prof)) {
-            $this->profs[] = $prof;
+        if (!$this->evaluateurs->contains($evaluateur)) {
+            $this->evaluateurs[] = $evaluateur;
         }
-
         return $this;
     }
 
-    public function removeEvaluateurs(Prof $prof): self
+    public function removeEvaluateur(Prof $evaluateur): self
     {
-        if ($this->profs->contains($prof)) {
-            $this->profs->removeElement($prof);
+        if ($this->evaluateurs->contains($evaluateur)) {
+            $this->evaluateurs->removeElement($evaluateur);
         }
 
         return $this;

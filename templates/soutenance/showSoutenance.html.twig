@@ -30,7 +30,7 @@
     </div>
     <!--Modal Ajouter Filière-->
 
-    <!-- Modal modifier Filière-->
+    <!-- Modal modifier Soutenance first form-->
     <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -40,7 +40,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                {{ form_start(soutenanceFormSet, {'action': path('soutenance_add_set',{'id': idSoutenance}), 'method': 'POST'}) }}
+                {{ form_start(soutenanceFormSet, {'action': path('soutenance_add_set',{'id': idSoutenance, 'nb': 0}), 'method': 'POST'}) }}
                 <div class="modal-body">
                     {{ form_widget(soutenanceFormSet.nom) }}
                     {{ form_widget(soutenanceFormSet.alerte) }}
@@ -54,6 +54,30 @@
             </div>
         </div>
     </div>
+    <!-- Modal modifier Soutenance first form-->
+    <!-- Modal modifier Soutenance first form-->
+    <div class="modal fade" id="setModele2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Modifier salle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(soutenanceEvaluateurFormSet, {'action': path('soutenance_add_set',{'id': idSoutenance, 'nb': 1}), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_widget(soutenanceEvaluateurFormSet.evaluateurs) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </div>
+                {{ form_end(soutenanceEvaluateurFormSet) }}
+            </div>
+        </div>
+    </div>
+    <!-- Modal modifier Soutenance first form-->
 
     <!-- Begin Page Content -->
     <div class="container-fluid">
@@ -67,7 +91,8 @@
             {% for soutenance in soutenances %}
                 <div>
                     {{ soutenance.nom }} {{ soutenance.alerte|date }} {{ soutenance.module.nom }}
-                    <a href="{{ path('soutenance_set', {'id': soutenance.id}) }}">edit</a>
+                    <a href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 1}) }}">edit</a> &nbsp;
+                    <a href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 2}) }}">Evaluateurs</a>
                 </div>
             {% endfor %}
 
@@ -83,10 +108,16 @@
 {% endblock %}
     {% block javascripts %}
         {{ parent() }}
-        {% if setModel == true%}
+        {% if setModel == true %}
             <script>
                 const $=jQuery;
-                $('#setModele').modal('show');
+                {% if nb == 1 %}
+                    console.log("jj");
+                    $('#setModele').modal('show');
+                {% elseif nb == 2 %}
+                    console.log("jj");
+                $('#setModele2').modal('show');
+                {% endif %}
             </script>
         {% endif %}
     {% endblock %}

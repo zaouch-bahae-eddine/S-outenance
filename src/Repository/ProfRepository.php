@@ -47,4 +47,13 @@ class ProfRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findOtherProfs($value)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.id != :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

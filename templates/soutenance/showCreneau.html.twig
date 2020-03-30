@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion Creneau{% endblock %}
+
+{% block content %}
+
+        <!-- Modal Ajouter creneau-->
+    <div class="modal fade" id="addModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Ajouter creneau</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(creneauForm, {'action': path('soutenance_creneau_add', {'id': idSoutenance}), 'method': 'POST'}) }}
+                <div class="modal-body">
+                    {{ form_row(creneauForm.date) }}
+                    {{ form_row(creneauForm.heure) }}
+                    {{ form_row(creneauForm.duree) }}
+                    {{ form_row(creneauForm.capacite) }}
+                    {{ form_row(creneauForm.salles) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
+                </div>
+                {{ form_end(creneauForm) }}
+            </div>
+        </div>
+    </div>
+    <!--Modal Ajouter creneau-->
+
+    <!-- Modal modifier creneau-->
+    <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Modifier creneau</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {{ form_start(creneauFormSet, {'action': path('soutenance_creneau_add_set', {'id': idSoutenance, 'creneau': idCreneau}), 'method': 'POST'}) }}
+
+                <div class="modal-body">
+                    {{ form_row(creneauFormSet.date) }}
+                    {{ form_row(creneauFormSet.heure) }}
+                    {{ form_row(creneauFormSet.duree) }}
+                    {{ form_row(creneauFormSet.capacite) }}
+                    {{ form_row(creneauFormSet.salles) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </div>
+                {{ form_end(creneauFormSet) }}
+            </div>
+        </div>
+    </div>
+    <!-- Modal modifier creneau-->
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Gestion Crenau</h1>
+
+        <!-- DataTales Example -->
+
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
+                    Nouveau creneau
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>date</th>
+                            <th>heure</th>
+                            <th>duree</th>
+                            <th>capacite</th>
+                            <th>salle</th>
+                            <th>Modifier</th>
+                            <th>Supprimer</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>date</th>
+                            <th>heure</th>
+                            <th>duree</th>
+                            <th>capacite</th>
+                            <th>salle</th>
+                            <th>Modifier</th>
+                            <th>Supprimer</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for creneau in creneaux %}
+                            {% if creneau.salles|length == 0 %}
+                                <tr>
+                                    <td>{{ creneau.date|date("m/d/Y") }}</td>
+                                    <td>{{ creneau.heure|date('H:i') }}</td>
+                                    <td>{{ creneau.duree }}</td>
+                                    <td>{{ creneau.capacite }}</td>
+                                    <td></td>
+                                    <td>
+                                        <a href="{{ path('soutenance_creneau_set', {'id': idSoutenance, 'creneau': creneau.id}) }}">edit</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('soutenance_creneau_remove', {'id': idSoutenance, 'creneau': creneau.id}) }}">remove</a>
+                                    </td>
+                            {% else %}
+                                    {% for salle in creneau.salles %}
+                                            <tr>
+                                            <td>{{ creneau.date|date("m/d/Y") }}</td>
+                                            <td>{{ creneau.heure|date('H:i') }}</td>
+                                            <td>{{ creneau.duree }}</td>
+                                            <td>{{ creneau.capacite }}</td>
+                                            <td>{{ salle.nom }}</td>
+                                        <td>
+                                            <a href="{{ path('soutenance_creneau_set', {'id': idSoutenance, 'creneau': creneau.id}) }}">edit</a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('soutenance_creneau_remove', {'id': idSoutenance, 'creneau': creneau.id}) }}">remove</a>
+                                        </td>
+                                    {% endfor %}
+
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {% if setModel == true%}
+            <script>
+                const $=jQuery;
+                $('#setModele').modal('show');
+            </script>
+        {% endif %}
+    {% endblock %}

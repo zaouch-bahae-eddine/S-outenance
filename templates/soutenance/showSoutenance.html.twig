@@ -93,6 +93,7 @@
                     {{ soutenance.nom }} {{ soutenance.alerte|date }} {{ soutenance.module.nom }}
                     <a href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 1}) }}">edit</a> &nbsp;
                     <a href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 2}) }}">Evaluateurs</a>
+                    <a href="{{ path('soutenance_creneau_show', {'id': soutenance.id} ) }}">Créneaux</a>
                 </div>
             {% endfor %}
 

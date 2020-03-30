@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion Creneau{% endblock %}
+
+{% block content %}
+
+       <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Gestion Note</h1>
+
+        <!-- DataTales Example -->
+
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <td>Nom</td>
+                            <td>Prenom</td>
+                            {% for evaluateur in soutenance.evaluateurs %}
+                                <td>{{ evaluateur.compte.nom }} {{ evaluateur.compte.prenom }}</td>
+                            {% endfor %}
+                                <td>/20</td>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <td>Nom</td>
+                            <td>Prenom</td>
+                            {% for evaluateur in soutenance.evaluateurs %}
+                                <td>{{ evaluateur.compte.nom }} {{ evaluateur.compte.prenom }}</td>
+                            {% endfor %}
+                            <td>/20</td>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for evaluateur in soutenance.evaluateurs %}
+                                {% for etudiant in soutenance.module.filiere.etudiants %}
+                                    <td>{{ etudiant.compte.nom }}</td>
+                                    <td>{{ etudiant.compte.prenom }}</td>
+
+                                    <td></td>
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {% if setModel == true%}
+            <script>
+                const $=jQuery;
+                $('#setModele').modal('show');
+            </script>
+        {% endif %}
+    {% endblock %}

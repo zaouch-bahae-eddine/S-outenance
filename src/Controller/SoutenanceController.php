@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Creneau;
 use App\Entity\Soutenance;
+use App\Form\CreneauFormType;
 use App\Form\SoutenanceBaseFormType;
 use App\Form\SoutenanceEvaluateurFormType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +34,7 @@ class SoutenanceController extends AbstractController
 
     /**
      * @Route("/soutenance", name="soutenance_show")
-     *  @Route("/soutenance/set/{id}-{nb}", name="soutenance_set")
+     * @Route("/soutenance/set/{id}-{nb}", name="soutenance_set")
      */
     public function showSoutenanceAction(Soutenance $soutenance = null, $nb = 0)
     {
@@ -91,7 +94,6 @@ class SoutenanceController extends AbstractController
                     $evaluateurs = $soutenance->getEvaluateurs();
                     foreach ($evaluateurs as $evaluateur){
                         $soutenance->removeEvaluateur($evaluateur);
-                        dump($soutenance);
                     }
                     $nvEvaluateurs = $form->getData()->getEvaluateurs();
                     foreach ($nvEvaluateurs as $evaluateur){
@@ -108,4 +110,106 @@ class SoutenanceController extends AbstractController
         }
         return $this->redirectToRoute('soutenance_show');
     }
+    /**
+     * @Route("/soutenance/{id}/creneau", name="soutenance_creneau_show")
+     *  @Route("/soutenance/{id}/creneau/set/{creneau}", name="soutenance_creneau_set")
+     */
+    public function showCreneaauToSoutenanceAction(Soutenance $soutenance, Creneau $creneau = null)
+    {
+        $formVide = $this->createForm(CreneauFormType::class);
+        $form = $this->createForm(CreneauFormType::class,$creneau);
+        $creneaux = $soutenance->getCreneaus();
+        if(!$creneau)
+            return $this->render('soutenance/showCreneau.html.twig', [
+                'creneaux' => $creneaux,
+                'creneauForm' => $formVide->createView(),
+                'creneauFormSet' =>$form->createView(),
+                'idSoutenance' => $soutenance->getId(),
+                'idCreneau' => 0,
+                'setModel' => false,
+            ]);
+        return $this->render('soutenance/showCreneau.html.twig', [
+            'creneaux' => $creneaux,
+            'creneauForm' => $formVide->createView(),
+            'creneauFormSet' =>$form->createView(),
+            'idSoutenance' => $soutenance->getId(),
+            'idCreneau' => $creneau->getId(),
+            'setModel' => true,
+        ]);
+    }
+    /**
+     * @Route("/soutenance/{id}/creneau/add", name="soutenance_creneau_add")
+     * @Route("/soutenance/{id}/creneau/add/{creneau}", name="soutenance_creneau_add_set")
+     */
+    public function addCreneaauToSoutenanceAction(Request $request, Soutenance $soutenance, Creneau $creneau = null)
+    {
+        if($creneau != null)
+            foreach ($soutenance->getCreneaus() as $cr){
+                if($cr->getId() == $creneau->getId()){
+                    foreach ($cr->getSalles() as $salle){
+                        $creneau->removeSalle($salle);
+                    }
+                }
+            }
+
+        $form = $this->createForm(CreneauFormType::class,$creneau);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+
+            if(!$creneau){
+                /**
+                 * @var Creneau $creneau
+                 */
+                $creneau = $form->getData();
+                $creneau->setSoutenance($soutenance);
+                $msg = "ajouté";
+            }
+            else{
+
+                foreach ($creneau->getSalles() as $salle){
+                    $salle->addCreneau($creneau);
+                }
+                $msg = "modifié";
+            }
+            if(!$creneau->getDate())
+                throw new NotFoundHttpException('Date ne peut pas être null');
+
+            $this->em->persist($creneau);
+            $this->em->flush();
+            $this->addFlash('success', 'Créneau '.$msg);
+        }
+        return $this->redirectToRoute('soutenance_creneau_show',['id' => $soutenance->getId()]);
+    }
+
+    /**
+     * @Route("/soutenance/{id}/creneau/remove/{creneau}", name="soutenance_creneau_remove")
+     */
+    public function removeCreneau(Soutenance $soutenance, Creneau $creneau){
+        $soutenance->removeCreneau($creneau);
+        $this->em->flush();
+        return $this->redirectToRoute('soutenance_creneau_show',['id' => $soutenance->getId()]);
+    }
+
+    /**
+     * @Route("/soutenance/{id}/note", name="soutenance_note_show")
+     */
+    public function showNoteAction(Soutenance $soutenance)
+    {
+        //if($soutenance->getProf()->getId() == $this->getUser()->getProf()->getId())
+        $etudiants = $soutenance->getModule()->getFiliere()->getEtudiants();
+        $notes = $soutenance->getNotes();
+            return $this->render('soutenance/showNote.html.twig', [
+                'notes' => $notes,
+                'soutenance' => $soutenance,
+            ]);
+    }
+    /**
+     * @Route("/soutenance/{id}/note/add", name="soutenance_note_add", methods={POST})
+     */
+    public function addNoteAction(Request $request, Soutenance $soutenance)
+    {
+        return $this->redirectToRoute('soutenance_creneau_show',['id' => $soutenance->getId()]);
+    }
+
+
 }

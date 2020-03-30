@@ -50,7 +50,7 @@ class Creneau
     private $etudiants;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Salle", mappedBy="creneaus")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Salle", mappedBy="creneaus", cascade={"persist"})
      */
     private $salles;
 
@@ -165,7 +165,6 @@ class Creneau
             $this->salles[] = $salle;
             $salle->addCreneau($this);
         }
-
         return $this;
     }
 
@@ -175,7 +174,6 @@ class Creneau
             $this->salles->removeElement($salle);
             $salle->removeCreneau($this);
         }
-
         return $this;
     }
 }

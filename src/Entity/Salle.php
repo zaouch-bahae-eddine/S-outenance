@@ -34,7 +34,7 @@ class Salle
     private $capacite;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Creneau", inversedBy="salles")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Creneau", inversedBy="salles", cascade={"persist"})
      */
     private $creneaus;
 

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Creneau;
+use App\Entity\Note;
 use App\Entity\Soutenance;
 use App\Form\CreneauFormType;
 use App\Form\SoutenanceBaseFormType;
@@ -195,16 +196,38 @@ class SoutenanceController extends AbstractController
      */
     public function showNoteAction(Soutenance $soutenance)
     {
-        //if($soutenance->getProf()->getId() == $this->getUser()->getProf()->getId())
+
+        if($soutenance->getProf()->getId() == $this->getUser()->getProf()->getId())
+            $all = true;
+        else
+            $all = false;
         $etudiants = $soutenance->getModule()->getFiliere()->getEtudiants();
+        foreach ($etudiants as $etudiant){
+            foreach ($soutenance->getEvaluateurs() as $evaluateur){
+                if($all)
+                    $tab[$etudiant->getId()][$evaluateur->getId()] = 0;
+                $tab[$etudiant->getId()]["me"] = 0;
+                foreach ($etudiant->getNotes() as $note){
+                    if($all)
+                        if($note->getProf()->getId() == $evaluateur->getId())
+                            $tab[$etudiant->getId()][$evaluateur->getId()] = $note;
+                    if($note->getProf()->getId() == $this->getUser()->getProf());
+                        $tab[$etudiant->getId()]["me"] = $note;
+                }
+            }
+        }
         $notes = $soutenance->getNotes();
             return $this->render('soutenance/showNote.html.twig', [
-                'notes' => $notes,
+                'notes' => $etudiant->getNotes(),
+                'etudiants' => $etudiants,
+                'evaluateurs' => $soutenance->getEvaluateurs(),
                 'soutenance' => $soutenance,
+                'tab' => $tab,
+                'all' => $all
             ]);
     }
     /**
-     * @Route("/soutenance/{id}/note/add", name="soutenance_note_add", methods={POST})
+     * @Route("/soutenance/{id}/note/add", name="soutenance_note_add")
      */
     public function addNoteAction(Request $request, Soutenance $soutenance)
     {

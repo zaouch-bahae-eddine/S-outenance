@@ -3,7 +3,6 @@
 {% block title %}Gestion Creneau{% endblock %}
 
 {% block content %}
-
        <!-- Begin Page Content -->
     <div class="container-fluid">
 
@@ -14,15 +13,19 @@
 
         <div class="card shadow mb-4">
             <div class="card-body">
+                <form>
                 <div class="table-responsive">
+
                     <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                         <tr>
                             <td>Nom</td>
                             <td>Prenom</td>
-                            {% for evaluateur in soutenance.evaluateurs %}
-                                <td>{{ evaluateur.compte.nom }} {{ evaluateur.compte.prenom }}</td>
-                            {% endfor %}
+                            {% if all == true %}
+                                {% for evaluateur in soutenance.evaluateurs %}
+                                    <td>{{ evaluateur.compte.nom }} {{ evaluateur.compte.prenom }}</td>
+                                {% endfor %}
+                            {% endif %}
                                 <td>/20</td>
                         </tr>
                         </thead>
@@ -30,24 +33,33 @@
                         <tr>
                             <td>Nom</td>
                             <td>Prenom</td>
-                            {% for evaluateur in soutenance.evaluateurs %}
-                                <td>{{ evaluateur.compte.nom }} {{ evaluateur.compte.prenom }}</td>
-                            {% endfor %}
-                            <td>/20</td>
+                            {% if all == true %}
+                                {% for evaluateur in soutenance.evaluateurs %}
+                                    <td>{{ evaluateur.compte.nom }} {{ evaluateur.compte.prenom }}</td>
+                                {% endfor %}
+                            {% endif %}
+                            <td><button type="submit">Enregistrer</button> </td>
                         </tr>
                         </tfoot>
                         <tbody>
-                            {% for evaluateur in soutenance.evaluateurs %}
-                                {% for etudiant in soutenance.module.filiere.etudiants %}
-                                    <td>{{ etudiant.compte.nom }}</td>
-                                    <td>{{ etudiant.compte.prenom }}</td>
 
-                                    <td></td>
-                                {% endfor %}
+                            {% for etudiant in etudiants %}
+                                <tr>
+                                <td>{{ etudiant.compte.nom }}</td>
+                                <td>{{ etudiant.compte.prenom }}</td>
+                                    {% if all == true %}
+                                        {% for evaluateur in evaluateurs %}
+                                            <td>{{ tab[etudiant.id][evaluateur.id] }}</td>
+                                        {% endfor %}
+                                    {% endif %}
+                                    <td><input type="text" value="{{ tab[etudiant.id]["me"] }}"/></td>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
+
                 </div>
+                </form>
             </div>
         </div>
 
@@ -63,10 +75,4 @@
 {% endblock %}
     {% block javascripts %}
         {{ parent() }}
-        {% if setModel == true%}
-            <script>
-                const $=jQuery;
-                $('#setModele').modal('show');
-            </script>
-        {% endif %}
     {% endblock %}

@@ -237,7 +237,6 @@ class Soutenance
     public function setProf(?Prof $prof): self
     {
         $this->prof = $prof;
-
         return $this;
     }
 

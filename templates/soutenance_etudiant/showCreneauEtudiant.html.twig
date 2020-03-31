@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion Creneau{% endblock %}
+
+{% block content %}
+
+
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Gestion Crenau</h1>
+
+        <!-- DataTales Example -->
+
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>date</th>
+                            <th>heure</th>
+                            <th>duree</th>
+                            <th>capacite</th>
+                            <th>salle</th>
+                            <th>choisir</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>date</th>
+                            <th>heure</th>
+                            <th>duree</th>
+                            <th>capacite</th>
+                            <th>salle</th>
+                            <th>choisir</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for creneau in creneaus %}
+                            {% if creneau.salles|length == 0 %}
+                                <tr>
+                                <td>{{ creneau.date|date("m/d/Y") }}</td>
+                                <td>{{ creneau.heure|date('H:i') }}</td>
+                                <td>{{ creneau.duree }}</td>
+                                <td>{{ creneau.capacite }}</td>
+                                <td></td>
+                                <td>
+                                    <a href="{{ path('soutenance_creneau_etudiant_add', {'id': idSoutenance, 'creneau': creneau.id}) }}">choisir</a>
+                                </td>
+                            {% else %}
+                                {% for salle in creneau.salles %}
+                                    <tr>
+                                    <td>{{ creneau.date|date("m/d/Y") }}</td>
+                                    <td>{{ creneau.heure|date('H:i') }}</td>
+                                    <td>{{ creneau.duree }}</td>
+                                    <td>{{ creneau.capacite }}</td>
+                                    <td>{{ salle.nom }}</td>
+                                    <td>
+                                        <a href="{{ path('soutenance_creneau_etudiant_add', {'id': idSoutenance, 'creneau': creneau.id}) }}">choisir</a>
+                                    </td>
+                                {% endfor %}
+
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('warning') %}
+        <div class="alert alert-warning">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}

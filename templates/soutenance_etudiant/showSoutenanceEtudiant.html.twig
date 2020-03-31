@@ -4,80 +4,6 @@
 
 {% block content %}
 
-    <!-- Modal Ajouter Filière-->
-    <div class="modal fade" id="addModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLongTitle">Ajouter salle</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {{ form_start(soutenanceForm, {'action': path('soutenance_add'), 'method': 'POST'}) }}
-                <div class="modal-body">
-                    {{ form_widget(soutenanceForm.nom) }}
-                    {{ form_widget(soutenanceForm.alerte) }}
-                    {{ form_widget(soutenanceForm.module) }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="submit" class="btn btn-primary">Ajouter</button>
-                </div>
-                {{ form_end(soutenanceForm) }}
-            </div>
-        </div>
-    </div>
-    <!--Modal Ajouter Filière-->
-
-    <!-- Modal modifier Soutenance first form-->
-    <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLongTitle">Modifier salle</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {{ form_start(soutenanceFormSet, {'action': path('soutenance_add_set',{'id': idSoutenance, 'nb': 0}), 'method': 'POST'}) }}
-                <div class="modal-body">
-                    {{ form_widget(soutenanceFormSet.nom) }}
-                    {{ form_widget(soutenanceFormSet.alerte) }}
-                    {{ form_widget(soutenanceFormSet.module) }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="submit" class="btn btn-primary">Modifier</button>
-                </div>
-                {{ form_end(soutenanceFormSet) }}
-            </div>
-        </div>
-    </div>
-    <!-- Modal modifier Soutenance first form-->
-    <!-- Modal modifier Soutenance first form-->
-    <div class="modal fade" id="setModele2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLongTitle">Modifier salle</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                {{ form_start(soutenanceEvaluateurFormSet, {'action': path('soutenance_add_set',{'id': idSoutenance, 'nb': 1}), 'method': 'POST'}) }}
-                <div class="modal-body">
-                    {{ form_widget(soutenanceEvaluateurFormSet.evaluateurs) }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="submit" class="btn btn-primary">Modifier</button>
-                </div>
-                {{ form_end(soutenanceEvaluateurFormSet) }}
-            </div>
-        </div>
-    </div>
-    <!-- Modal modifier Soutenance first form-->
 
     <!-- Begin Page Content -->
     <div class="container-fluid">
@@ -88,13 +14,26 @@
             Nouveau Soutenance
         </button>
 
-        {% for soutenance in soutenances %}
+        {% for module in modules %}
             <div>
-                {{ soutenance.nom }} {{ soutenance.alerte|date }} {{ soutenance.module.nom }}
-                <a href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 1}) }}">edit</a> &nbsp;
-                <a href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 2}) }}">Evaluateurs</a>
-                <a href="{{ path('soutenance_creneau_show', {'id': soutenance.id} ) }}">Créneaux</a>
-                <a href="{{ path('soutenance_note_show', {'id': soutenance.id} ) }}">Notes</a>
+                {{ module.nom }} Soutenances:
+                    {% for soutenance in soutenancesByModule[module.id] %}
+                        <div>
+                            {{ soutenance.nom }} Professeur: {{ soutenance.prof.compte.nom }} {{ soutenance.prof.compte.prenom }}
+                            {% if canShow[soutenance.id]['bool'] == true %}
+                                <a href="{{ path('soutenance_creneau_etudiant_show', {'id': soutenance.id}) }}">Choisir un Créneau</a>
+                            {% else %}
+                                <div>
+                                    Mon Créneau: {{ canShow[soutenance.id]['creneau'].date|date("m/d/Y") }} {{ canShow[soutenance.id]['creneau'].heure|date('H:i') }} {{ canShow[soutenance.id]['creneau'].duree }}h
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div>
+                        {% for evaluateur in soutenance.evaluateurs %}
+                            Professeur: {{ evaluateur.compte.nom }}{{ evaluateur.compte.prenom }}<br/>
+                        {% endfor %}
+                        </div>
+                    {% endfor %}
             </div>
         {% endfor %}
 
@@ -110,14 +49,4 @@
 {% endblock %}
     {% block javascripts %}
         {{ parent() }}
-        {% if setModel == true %}
-            <script>
-                const $=jQuery;
-                {% if nb == 1 %}
-                $('#setModele').modal('show');
-                {% elseif nb == 2 %}
-                $('#setModele2').modal('show');
-                {% endif %}
-            </script>
-        {% endif %}
     {% endblock %}

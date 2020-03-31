@@ -47,4 +47,13 @@ class SoutenanceRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findSoutenancesByModule($moduleId)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.module = :moduleId')
+            ->setParameter('moduleId', $moduleId)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

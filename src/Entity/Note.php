@@ -73,7 +73,7 @@ class Note
         return $this->note;
     }
 
-    public function setNote(int $note): self
+    public function setNote($note): self
     {
         $this->note = $note;
 

@@ -36,15 +36,21 @@ class NoteRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Note
+
+    public function findNoteByProfAndSoutenance($etudiantId, $profId, $soutenanceId)
     {
         return $this->createQueryBuilder('n')
-            ->andWhere('n.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('n.etudiant = :etudiantId')
+            ->andWhere('n.prof = :profId')
+            ->andWhere('n.soutenance = :soutenanceId')
+            ->setParameter('profId', $profId)
+            ->setParameter('soutenanceId', $soutenanceId)
+            ->setParameter('etudiantId', $etudiantId)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
+
+
 }

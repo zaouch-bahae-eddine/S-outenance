@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello RenduController!{% endblock %}
+
+{% block body %}
+    {{ form_start(form, {'action': path('rendu_add', {'id': idSoutenance}), 'method': 'POST',"multipart":"multipart/form-data"}) }}
+{#{{ form_row(form.rendu) }}#}
+        <input type="file" name="renduFile" required="required"/>
+        <button type="submit">Charger</button>
+    {{ form_end(form) }}
+{% endblock %}

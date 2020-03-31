@@ -196,31 +196,44 @@ class SoutenanceController extends AbstractController
      */
     public function showNoteAction(Soutenance $soutenance)
     {
-
         if($soutenance->getProf()->getId() == $this->getUser()->getProf()->getId())
             $all = true;
         else
             $all = false;
         $etudiants = $soutenance->getModule()->getFiliere()->getEtudiants();
+        $evaluateurs = $soutenance->getEvaluateurs();
+
+        /*
         foreach ($etudiants as $etudiant){
             foreach ($soutenance->getEvaluateurs() as $evaluateur){
                 if($all)
                     $tab[$etudiant->getId()][$evaluateur->getId()] = 0;
                 $tab[$etudiant->getId()]["me"] = 0;
                 foreach ($etudiant->getNotes() as $note){
-                    if($all)
-                        if($note->getProf()->getId() == $evaluateur->getId())
-                            $tab[$etudiant->getId()][$evaluateur->getId()] = $note;
-                    if($note->getProf()->getId() == $this->getUser()->getProf());
-                        $tab[$etudiant->getId()]["me"] = $note;
+                    if($note->getSoutenance()->getId() == $soutenance->getId()) {
+                        if ($all)
+                            $tab[$etudiant->getId()][$evaluateur->getId()] = $note->getNote();
+                        else
+                            $tab[$etudiant->getId()]["me"] = $note->getNote();
+                    }
                 }
             }
         }
-        $notes = $soutenance->getNotes();
+        $notes = $soutenance->getNotes();*/
+        $rep = $this->em->getRepository(Note::class);
+        foreach ($etudiants as $etudiant){
+            foreach ($evaluateurs as $evaluateur){
+                if($all){
+                    $note = $rep->findNoteByProfAndSoutenance($etudiant->getId(),$evaluateur->getId(), $soutenance->getId());
+                    $tab[$etudiant->getId()][$evaluateur->getId()] = $note == null? 0 : $note->getNote();
+                }
+                $note = $rep->findNoteByProfAndSoutenance($etudiant->getId(),$this->getUser()->getProf()->getId(), $soutenance->getId());
+                $tab[$etudiant->getId()]["me"] = $note == null? 0 : $note->getNote();
+            }
+        }
             return $this->render('soutenance/showNote.html.twig', [
-                'notes' => $etudiant->getNotes(),
                 'etudiants' => $etudiants,
-                'evaluateurs' => $soutenance->getEvaluateurs(),
+                'evaluateurs' => $evaluateurs,
                 'soutenance' => $soutenance,
                 'tab' => $tab,
                 'all' => $all
@@ -231,7 +244,21 @@ class SoutenanceController extends AbstractController
      */
     public function addNoteAction(Request $request, Soutenance $soutenance)
     {
-        return $this->redirectToRoute('soutenance_creneau_show',['id' => $soutenance->getId()]);
+        $etudiants = $soutenance->getModule()->getFiliere()->getEtudiants();
+        foreach ($etudiants as $etudiant){
+            $note = $this->em->getRepository(Note::class)
+                ->findNoteByProfAndSoutenance($etudiant->getId(), $this->getUser()->getProf()->getId(),$soutenance->getId());
+            if(!$note) {
+                $note = new Note();
+                $note->setSoutenance($soutenance)
+                    ->setProf($this->getUser()->getProf())
+                    ->setEtudiant($etudiant);
+                $this->em->persist($note);
+            }
+            $note->setNote(floatval($request->request->get('id-'.$etudiant->getId())));
+        }
+        $this->em->flush();
+        return $this->redirectToRoute('soutenance_note_show',['id' => $soutenance->getId()]);
     }
 
 

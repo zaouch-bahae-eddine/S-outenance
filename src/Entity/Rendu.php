@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RenduRepository")
@@ -37,6 +38,16 @@ class Rendu
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $rendu;
+
+    private  $renduFile;
+
+    /**
+     * @param mixed $renduFile
+     */
+    public function setRenduFile($renduFile): void
+    {
+        $this->renduFile = $renduFile;
+    }
 
     public function getId(): ?int
     {
@@ -84,10 +95,28 @@ class Rendu
         return $this->rendu;
     }
 
-    public function setRendu(?string $rendu): self
+    public function setRendu($rendu,$path): self
     {
-        $this->rendu = $rendu;
+        if($rendu) {
+            if(file_exists($path.$this->getRendu())&&$path.$this->getRendu()!=$path){
+                unlink($path.$this->getRendu());
+            }
+        }
+        try {
+            $fileName = $this->generateUniqueFileName().'.'.$rendu->guessExtension();
+            $this->rendu ='/public/uploads/rendu/'.$fileName;
 
+            $rendu->move(
+                $path.'/public/uploads/rendu/',
+                $fileName
+            );
+        } catch (FileException $e) {
+            throw new \Exception("Un probleme dans le telechargement du fichier.");
+        }
         return $this;
+    }
+    private function generateUniqueFileName()
+    {
+        return md5(uniqid());
     }
 }

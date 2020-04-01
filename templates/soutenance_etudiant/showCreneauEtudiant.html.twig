@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gestion Creneau{% endblock %}
+{% block title %}Choisir un Creneau{% endblock %}
 
 {% block content %}
 
@@ -9,10 +9,9 @@
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Gestion Crenau</h1>
-
+        <h1 class="h3 mb-2 text-gray-800">Choisir un Créneau</h1>
+        <h1 class="h3 mb-2 text-blue-900"  style="text-align: center;color: #4e73df ;">{{ soutenance.nom }}</h1>
         <!-- DataTales Example -->
-
         <div class="card shadow mb-4">
             <div class="card-body">
                 <div class="table-responsive">
@@ -47,7 +46,7 @@
                                 <td>{{ creneau.capacite }}</td>
                                 <td></td>
                                 <td>
-                                    <a href="{{ path('soutenance_creneau_etudiant_add', {'id': idSoutenance, 'creneau': creneau.id}) }}">choisir</a>
+                                    <a href="{{ path('soutenance_creneau_etudiant_add', {'id': soutenance.id, 'creneau': creneau.id}) }}">choisir</a>
                                 </td>
                             {% else %}
                                 {% for salle in creneau.salles %}
@@ -58,7 +57,7 @@
                                     <td>{{ creneau.capacite }}</td>
                                     <td>{{ salle.nom }}</td>
                                     <td>
-                                        <a href="{{ path('soutenance_creneau_etudiant_add', {'id': idSoutenance, 'creneau': creneau.id}) }}">choisir</a>
+                                        <a href="{{ path('soutenance_creneau_etudiant_add', {'id': soutenance.id, 'creneau': creneau.id}) }}">choisir</a>
                                     </td>
                                 {% endfor %}
 

@@ -47,4 +47,15 @@ class RenduRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findRenduBySoutenanceAndEtudiant($idEtudiant, $idSoutenance)
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.etudiant = :idEtudiant')
+            ->andWhere('r.soutenance = :idSoutenance')
+            ->setParameter('idEtudiant', $idEtudiant)
+            ->setParameter('idSoutenance', $idSoutenance)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
 }

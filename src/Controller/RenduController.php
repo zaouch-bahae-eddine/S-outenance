@@ -23,10 +23,6 @@ class RenduController extends AbstractController
     {
         $this->em = $em;
     }
-    /**
-     * @Route("/soutenance/{id}/rendu", name="rendu_show")
-     * @Route("/soutenance/{id}/rendu/set", name="rendu_set")
-     */
     public function showRenduAction(Soutenance $soutenance, Rendu $rendu = null)
     {
 
@@ -36,10 +32,6 @@ class RenduController extends AbstractController
             "idSoutenance" => $soutenance->getId(),
             ]);
     }
-    /**
-     * @Route("/soutenance/{id}/rendu/add", name="rendu_add")
-     * @Route("/soutenance/{id}/rendu/set/{rendu}", name="rendu_add_set")
-     */
     public function addRenduAction(Request $request, Soutenance $soutenance = null, Rendu $rendu = null)
     {
         if(!$rendu)

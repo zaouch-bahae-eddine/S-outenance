@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Creneau;
+use App\Entity\Rendu;
 use App\Entity\Soutenance;
+use App\Form\RenduFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -31,9 +34,12 @@ class SoutenanceEtudiantController extends AbstractController
 
     /**
      * @Route("/soutenance", name="soutenance_etudiant_show")
+     * @Route("/soutenance/{id}/rendu/set", name="rendu_set")
      */
-    public function showSoutenanceEtudiant()
+    public function showSoutenanceEtudiant(Soutenance $soutenance = null)
     {
+        $form = $this->createForm(RenduFormType::class);
+
         $etudiant = $this->getUser()->getEtudiant();
         $rep = $this->em->getRepository(Soutenance::class);
         foreach ($etudiant->getFiliere()->getModules() as $module){
@@ -54,11 +60,65 @@ class SoutenanceEtudiantController extends AbstractController
             }
             $soutenancesByModule[$module->getId()] = $soutenancesCourantes;
         }
-        return $this->render('soutenance_etudiant/showSoutenanceEtudiant.html.twig', [
-            'soutenancesByModule' => $soutenancesByModule ,
-            'modules' => $etudiant->getFiliere()->getModules(),
-            'canShow' => $soutenanceShow,
-        ]);
+        $repRendu = $this->em->getRepository(Rendu::class);
+        if($soutenance){
+            $mesRendus = $repRendu->findRenduBySoutenanceAndEtudiant($this->getUser()->getEtudiant(), $soutenance->getId());
+            return $this->render('soutenance_etudiant/showSoutenanceEtudiant.html.twig', [
+                'soutenancesByModule' => $soutenancesByModule ,
+                'modules' => $etudiant->getFiliere()->getModules(),
+                'canShow' => $soutenanceShow,
+                "form"=>$form->createView(),
+                'setModel' => true,
+                'soutenance' => $soutenance,
+                'mesRendus' => $mesRendus,
+            ]);
+        }else{
+            return $this->render('soutenance_etudiant/showSoutenanceEtudiant.html.twig', [
+                'soutenancesByModule' => $soutenancesByModule ,
+                'modules' => $etudiant->getFiliere()->getModules(),
+                'canShow' => $soutenanceShow,
+                "form"=>$form->createView(),
+                'setModel' => false,
+                'soutenance' => $soutenance,
+                'mesRendus' => [],
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/soutenance/{id}/rendu/add", name="rendu_add_set")
+     */
+    public function addRenduAction(Request $request, Soutenance $soutenance = null)
+    {
+        $rendu = new Rendu();
+        $form = $this->createForm(RenduFormType::class,$rendu);
+        $form->handleRequest($request);
+        if(($form->isSubmitted() && $form->isValid())){
+            $rendu->setEtudiant($this->getUser()->getEtudiant())
+                ->setSoutenance($soutenance)
+                ->setRendu($request->files->get("renduFile"),$this->getParameter('rendu_directory'));
+            $this->em->persist($rendu);
+
+            $this->em->flush();
+            return $this->redirectToRoute('rendu_set',['id' => $soutenance->getId()]);
+        }
+        return $this->redirectToRoute('rendu_set',['id' => $soutenance->getId()]);
+    }
+
+    /**
+    * @Route("/soutenance/{id}/rendu/{rendu}/delete", name="rendu_delete")
+    */
+    public function deleteRenduAction(Soutenance $soutenance = null, Rendu $rendu = null)
+    {
+        $path = $rendu->getRendu();
+        $this->em->remove($rendu);
+        $this->em->flush();
+        if(file_exists($this->getParameter('rendu_directory').$path)
+            &&
+            $this->getParameter('rendu_directory')!=$this->getParameter('rendu_directory').$path){
+            unlink($this->getParameter('rendu_directory').$path);
+        }
+        return $this->redirectToRoute('rendu_set', ['id' => $soutenance->getId()]);
     }
     /**
      * @Route("/soutenance/{id}/crenau", name="soutenance_creneau_etudiant_show")
@@ -75,7 +135,7 @@ class SoutenanceEtudiantController extends AbstractController
             $creneaus = $soutenance->getCreneaus();
             return $this->render('soutenance_etudiant/showCreneauEtudiant.html.twig', [
                 'creneaus' => $creneaus,
-                'idSoutenance' => $soutenance->getId(),
+                'soutenance' => $soutenance,
             ]);
         }
         else

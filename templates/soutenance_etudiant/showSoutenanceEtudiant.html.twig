@@ -4,6 +4,37 @@
 
 {% block content %}
 
+    <!-- Modal modifier Soutenance first form-->
+    <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Gestion des rendux</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% if setModel == true %}
+                    {{ form_start(form, {'action': path('rendu_add_set', {'id': soutenance.id}), 'method': 'POST',"multipart":"multipart/form-data"}) }}
+                    <div class="modal-body">
+                        <ul>
+                            {% for rendu in mesRendus %}
+                                <li>{{ rendu.rendu }} <a href="{{ path('rendu_delete', {'id': soutenance.id, 'rendu': rendu.id}) }}">remove</a></li>
+                            {% endfor %}
+                        </ul>
+                        <input type="file" name="renduFile" required="required"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Charger</button>
+                    </div>
+                    {{ form_end(form) }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Modal modifier Rendu first form-->
+    {#{{ form_row(form.rendu) }}#}
 
     <!-- Begin Page Content -->
     <div class="container-fluid">
@@ -19,18 +50,20 @@
                 {{ module.nom }} Soutenances:
                     {% for soutenance in soutenancesByModule[module.id] %}
                         <div>
+                            <a href="{{ path('rendu_set', {'id': soutenance.id}) }}">Charger rendu</a>
                             {{ soutenance.nom }} Professeur: {{ soutenance.prof.compte.nom }} {{ soutenance.prof.compte.prenom }}
                             {% if canShow[soutenance.id]['bool'] == true %}
                                 <a href="{{ path('soutenance_creneau_etudiant_show', {'id': soutenance.id}) }}">Choisir un Créneau</a>
                             {% else %}
                                 <div>
-                                    Mon Créneau: {{ canShow[soutenance.id]['creneau'].date|date("m/d/Y") }} {{ canShow[soutenance.id]['creneau'].heure|date('H:i') }} {{ canShow[soutenance.id]['creneau'].duree }}h
+                                    Mon Créneau: {{ canShow[soutenance.id]['creneau'].date|date("d/m/Y") }} {{ canShow[soutenance.id]['creneau'].heure|date('H:i') }} {{ canShow[soutenance.id]['creneau'].duree }}h
                                 </div>
                             {% endif %}
                         </div>
                         <div>
+                            Professeur: {{ soutenance.prof.compte.nom }} {{ soutenance.prof.compte.prenom }}<br/>
                         {% for evaluateur in soutenance.evaluateurs %}
-                            Professeur: {{ evaluateur.compte.nom }}{{ evaluateur.compte.prenom }}<br/>
+                            Professeur: {{ evaluateur.compte.nom }} {{ evaluateur.compte.prenom }}<br/>
                         {% endfor %}
                         </div>
                     {% endfor %}
@@ -49,4 +82,11 @@
 {% endblock %}
     {% block javascripts %}
         {{ parent() }}
+
+        {% if setModel == true%}
+            <script>
+                const $=jQuery;
+                $('#setModele').modal('show');
+            </script>
+        {% endif %}
     {% endblock %}

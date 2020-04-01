@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RenduRepository")
@@ -30,7 +31,7 @@ class Rendu
     private $soutenance;
 
     /**
-     * @ORM\Column(type="smallint", nullable=true)
+     * @ORM\Column(type="float", nullable=true)
      */
     private $note;
 
@@ -40,6 +41,11 @@ class Rendu
     private $rendu;
 
     private  $renduFile;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nameFile;
 
     /**
      * @param mixed $renduFile
@@ -97,6 +103,7 @@ class Rendu
 
     public function setRendu($rendu,$path): self
     {
+        /** @var UploadedFile $rendu*/
         if($rendu) {
             if(file_exists($path.$this->getRendu())&&$path.$this->getRendu()!=$path){
                 unlink($path.$this->getRendu());
@@ -113,10 +120,23 @@ class Rendu
         } catch (FileException $e) {
             throw new \Exception("Un probleme dans le telechargement du fichier.");
         }
+        $this->setNameFile($rendu->getClientOriginalName());
         return $this;
     }
     private function generateUniqueFileName()
     {
         return md5(uniqid());
+    }
+
+    public function getNameFile(): ?string
+    {
+        return $this->nameFile;
+    }
+
+    public function setNameFile(string $nameFile): self
+    {
+        $this->nameFile = $nameFile;
+
+        return $this;
     }
 }

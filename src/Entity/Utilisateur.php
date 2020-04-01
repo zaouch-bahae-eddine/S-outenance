@@ -25,7 +25,7 @@ class Utilisateur implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true, nullable=true)
+     * @ORM\Column(type="string", length=255, unique=false, nullable=true)
      */
     private $mailPerso;
     /**

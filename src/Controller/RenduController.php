@@ -42,6 +42,7 @@ class RenduController extends AbstractController
             $rendu->setEtudiant($this->getUser()->getEtudiant())
                 ->setSoutenance($soutenance)
                 ->setRendu($request->files->get("renduFile"),$this->getParameter('rendu_directory'));
+            dd($request->files->get("renduFile"));
             $this->em->persist($rendu);
 
             $this->em->flush();

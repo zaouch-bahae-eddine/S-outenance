@@ -19,7 +19,7 @@
                     <div class="modal-body">
                         <ul>
                             {% for rendu in mesRendus %}
-                                <li>{{ rendu.rendu }} <a href="{{ path('rendu_delete', {'id': soutenance.id, 'rendu': rendu.id}) }}">remove</a></li>
+                                <li><a href="{{ asset(rendu.rendu|replace({"/public": ""})) }}" target="_blank" >{{ rendu.nameFile }}</a> <a href="{{ path('rendu_delete', {'id': soutenance.id, 'rendu': rendu.id}) }}">remove</a></li>
                             {% endfor %}
                         </ul>
                         <input type="file" name="renduFile" required="required"/>

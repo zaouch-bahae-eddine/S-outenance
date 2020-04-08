@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion Creneau{% endblock %}
+
+{% block content %}
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Gestion Note</h1>
+        <h1 class="h3 mb-2 text-blue-900"  style="text-align: center;color: #4e73df ;">{{ soutenance.nom }}</h1>
+
+        <!-- DataTales Example -->
+
+        <div class="card shadow mb-4">
+            <div class="card-body">
+
+                {% if all == true %}
+                    <form action="{{ path('soutenance_rendu_note_add', {'id': soutenance.id}) }}" method="post">
+                {% endif %}
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <td>Nom Etudiant</td>
+                                <td>Prenom Etudiant</td>
+                                <td>Rendu</td>
+                                {% if all == true %}
+                                    <td style="text-align: center;">/20</td>
+                                {% endif %}
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr>
+                                <td>Nom</td>
+                                <td>Prenom</td>
+                                <td>Rendu</td>
+                                {% if all == true %}
+                                    <td><button type="submit" class="form-control btn btn-primary">Enregistrer</button> </td>
+                                {% endif %}
+                            </tr>
+                            </tfoot>
+                            <tbody>
+
+                            {% for etudiant in etudiants %}
+                                <tr>
+                                    <td>{{ etudiant.compte.nom }}</td>
+                                    <td>{{ etudiant.compte.prenom }}</td>
+                                    <td>
+                                        {% if rendus[etudiant.id] != null %}
+                                          <a class="d-flex align-items-center" href="{{ asset(rendus[etudiant.id].rendu|replace({"/public": ""})) }}" target="_blank">
+                                                <div class="mr-2">
+                                                    <div class="icon-circle bg-primary">
+                                                        <i class="fas fa-file-alt text-white"></i>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <span class="font-weight-bold">{{ rendus[etudiant.id].nameFile }}</span>
+                                                </div>
+                                            </a>
+                                        {% else %}
+                                            <div class="d-flex align-items-center">
+                                                    <div class="icon-circle bg-warning  mr-2">
+                                                        <i class="fas fa-exclamation-triangle text-white"></i>
+                                                    </div>
+                                                    <div>
+                                                        <span class="font-weight-bold">Auccun fichier déposé</span>
+                                                    </div>
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    {% if all == true %}
+                                        <td >
+
+                                                <input class="form-control" id="id-{{ etudiant.id }}" name="id-{{ etudiant.id }}" type="text"
+                                                    {% if rendus[etudiant.id] != null %}
+                                                       value="{{ rendus[etudiant.id].note + 0 }}"
+                                                    {% else %}
+                                                        value="0"
+                                                    {% endif %}
+                                                            />
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+            {% if all == true %}
+                </form>
+            {% endif %}
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+    {% endblock %}

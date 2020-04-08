@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="background-color: #f8f9fc;>
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
@@ -10,18 +10,26 @@
 
   <!-- Custom styles for this template-->
   <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
+          <style>
+            #footer{
+              position:fixed;  /*Setting up the position*/
+              bottom:0;   /*Just Stay at the bottom*/
+              width:100%;   /*Cover the whole screen's width or the parent element's width*/
+            }
+          </style>
           {% block tableStyle %}
             <!-- Custom styles for this page -->
             <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
           {% endblock %}
         {% endblock %}
     </head>
-    <body>
+    <body ">
         {% block body %}
     			
   <!-- Page Wrapper -->
   <div id="wrapper">
 
+    {% if is_granted('ROLE_ADMIN') %}
     <!-- Sidebiar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -47,7 +55,6 @@
           Menu
         </div>
         {% block sidebarContent %}
-          {% if is_granted('ROLE_ADMIN') %}
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
               <a class="nav-link" href="{{ path('diplome_show') }}">
@@ -85,25 +92,16 @@
                 <i class="fas fa-chalkboard-teacher"></i>
                 <span>Enseignant</span></a>
             </li>
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
-          {% endif %}
-          {% if is_granted('ROLE_PROF') %}
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-              <a class="nav-link" href="{{ path('diplome_show') }}">
-                <i class="fas fa-stamp"></i>
-                <span>Soutenance</span></a>
-            </li>
-          {% endif %}
         {% endblock %}
         <!-- Sidebar Toggler (Sidebar) -->
         <div class="text-center d-none d-md-inline">
           <button class="rounded-circle border-0" id="sidebarToggle"></button>
         </div>
       </ul>
+
       <!-- End of Sidebar -->
     {% endblock %}
+    {% endif %}
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
 
@@ -189,7 +187,8 @@
     	</div>
 		</div>
 		</div>
-
+          <div id="footer">
+          </div>
         {% endblock %}
         {% block javascripts %}
 

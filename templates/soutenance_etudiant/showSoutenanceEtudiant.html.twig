@@ -40,34 +40,54 @@
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Gestion Soutenance</h1>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
-            Nouveau Soutenance
-        </button>
+        <h1 class="h3 mb-2 text-gray-800">Mes Soutenances</h1>
 
+        <div class="row">
         {% for module in modules %}
-            <div>
-                {{ module.nom }} Soutenances:
                     {% for soutenance in soutenancesByModule[module.id] %}
-                        <div>
-                            <a href="{{ path('rendu_set', {'id': soutenance.id}) }}">Charger rendu</a>
-                            {{ soutenance.nom }} Professeur: {{ soutenance.prof.compte.nom }} {{ soutenance.prof.compte.prenom }}
-                            {% if canShow[soutenance.id]['bool'] == true %}
-                                <a href="{{ path('soutenance_creneau_etudiant_show', {'id': soutenance.id}) }}">Choisir un Créneau</a>
-                            {% else %}
-                                <div>
-                                    Mon Créneau: {{ canShow[soutenance.id]['creneau'].date|date("d/m/Y") }} {{ canShow[soutenance.id]['creneau'].heure|date('H:i') }} {{ canShow[soutenance.id]['creneau'].duree }}h
+                    <div class="col-xl-6 col-md-6 mb-6" style="margin-top: 20px;">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="dropdown no-arrow" style="position: absolute; right: 0;">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    style="padding: 10px; font-size: 20px;"
+                                >
+                                    <i class="fas fa-ellipsis-h fa-sm fa-fw"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header">Gestion Soutenance</div>
+                                    <a class="dropdown-item" href="{{ path('rendu_set', {'id': soutenance.id}) }}">Charger rendu</a>
+                                    {% if canShow[soutenance.id]['bool'] == true %}
+                                        <a class="dropdown-item" href="{{ path('soutenance_creneau_etudiant_show', {'id': soutenance.id}) }}">Choisir un Créneau</a>
+                                    {% endif %}
                                 </div>
-                            {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Module {{ module.nom }}</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ soutenance.nom }}</div>
+                                        <div class="h5 mb-0 text-gray-600">
+                                        Professeur<ul>
+                                                        <li>{{ soutenance.prof.compte.nom }} {{ soutenance.prof.compte.prenom }}</li>
+                                                        {% for evaluateur in soutenance.evaluateurs %}
+                                                            <li>{{ evaluateur.compte.nom }} {{ evaluateur.compte.prenom }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                        </div>
+                                        {% if canShow[soutenance.id]['bool'] != true %}
+                                            <div class="h6 mb-0 font-weight-bold text-gray-700">
+                                                Mon Créneau: {{ canShow[soutenance.id]['creneau'].date|date("d/m/Y") }} {{ canShow[soutenance.id]['creneau'].heure|date('H:i') }} durée: {{ canShow[soutenance.id]['creneau'].duree }}h
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-clock fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            Professeur: {{ soutenance.prof.compte.nom }} {{ soutenance.prof.compte.prenom }}<br/>
-                        {% for evaluateur in soutenance.evaluateurs %}
-                            Professeur: {{ evaluateur.compte.nom }} {{ evaluateur.compte.prenom }}<br/>
-                        {% endfor %}
-                        </div>
+                    </div>
                     {% endfor %}
-            </div>
         {% endfor %}
 
     </div>

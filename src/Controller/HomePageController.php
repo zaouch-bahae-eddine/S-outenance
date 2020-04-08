@@ -12,7 +12,12 @@ class HomePageController extends AbstractController
      */
     public function index()
     {
-        return $this->render('home/index.html.twig', [
-        ]);
+        $user = $this->getUser();
+        if($user->getProf() != null)
+            return $this->redirectToRoute('soutenance_show');
+        if($user->getAdmin() != null)
+            return $this->redirectToRoute('diplome_show');
+        if($user->getEtudiant() != null)
+            return $this->redirectToRoute('soutenance_etudiant_show');
     }
 }

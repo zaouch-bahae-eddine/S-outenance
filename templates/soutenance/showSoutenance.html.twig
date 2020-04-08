@@ -83,21 +83,52 @@
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Gestion Soutenance</h1>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
-            Nouveau Soutenance
-        </button>
-
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-2 text-gray-800">Gestion Soutenance</h1>
+            <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
+                <i class="fas fa-plus fa-sm text-white-50"></i> Nouveau Soutenance
+            </button>
+        </div>
+        <div class="row">
             {% for soutenance in soutenances %}
-                <div>
-                    {{ soutenance.nom }} {{ soutenance.alerte|date }} {{ soutenance.module.nom }}
-                    <a href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 1}) }}">edit</a> &nbsp;
-                    <a href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 2}) }}">Evaluateurs</a>
-                    <a href="{{ path('soutenance_creneau_show', {'id': soutenance.id} ) }}">Créneaux</a>
-                    <a href="{{ path('soutenance_note_show', {'id': soutenance.id} ) }}">Notes</a>
-                </div>
-            {% endfor %}
 
+
+                    <!-- Earnings (Monthly) Card Example -->
+                    <div class="col-xl-6 col-md-6 mb-6" style="margin-top: 20px;">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="dropdown no-arrow" style="position: absolute; right: 0;">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    style="padding: 10px; font-size: 20px;"
+                                >
+                                    <i class="fas fa-ellipsis-h fa-sm fa-fw"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header">Gestion Soutenance</div>
+                                    <a class="dropdown-item" href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 1}) }}">Edit</a>
+                                    <a class="dropdown-item" href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 2}) }}">Evaluateurs</a>
+                                    <a class="dropdown-item" href="{{ path('soutenance_creneau_show', {'id': soutenance.id} ) }}">Créneaux</a>
+                                    <a class="dropdown-item" href="{{ path('soutenance_rendu_note_show', {'id': soutenance.id} ) }}">Rendus</a>
+                                    <a class="dropdown-item" href="{{ path('soutenance_note_show', {'id': soutenance.id} ) }}">Notes</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Delete</a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Module {{ soutenance.module.nom }}</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ soutenance.nom }}</div>
+                                        <div class="h6 mb-0 font-weight-bold text-gray-700">{{ soutenance.alerte|date }}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fas fa-clock fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
     </div>
     <!-- /.container-fluid-->
     {% for message in app.flashes('success') %}

@@ -43,7 +43,7 @@ class Rendu
     private  $renduFile;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $nameFile;
 
@@ -84,12 +84,12 @@ class Rendu
         return $this;
     }
 
-    public function getNote(): ?int
+    public function getNote(): ?float
     {
         return $this->note;
     }
 
-    public function setNote(?int $note): self
+    public function setNote(float $note): self
     {
         $this->note = $note;
 

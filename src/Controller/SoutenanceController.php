@@ -4,11 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Creneau;
 use App\Entity\Note;
+use App\Entity\Rendu;
 use App\Entity\Soutenance;
 use App\Form\CreneauFormType;
 use App\Form\SoutenanceBaseFormType;
 use App\Form\SoutenanceEvaluateurFormType;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -203,23 +203,6 @@ class SoutenanceController extends AbstractController
         $etudiants = $soutenance->getModule()->getFiliere()->getEtudiants();
         $evaluateurs = $soutenance->getEvaluateurs();
 
-        /*
-        foreach ($etudiants as $etudiant){
-            foreach ($soutenance->getEvaluateurs() as $evaluateur){
-                if($all)
-                    $tab[$etudiant->getId()][$evaluateur->getId()] = 0;
-                $tab[$etudiant->getId()]["me"] = 0;
-                foreach ($etudiant->getNotes() as $note){
-                    if($note->getSoutenance()->getId() == $soutenance->getId()) {
-                        if ($all)
-                            $tab[$etudiant->getId()][$evaluateur->getId()] = $note->getNote();
-                        else
-                            $tab[$etudiant->getId()]["me"] = $note->getNote();
-                    }
-                }
-            }
-        }
-        $notes = $soutenance->getNotes();*/
         $rep = $this->em->getRepository(Note::class);
         foreach ($etudiants as $etudiant){
             foreach ($evaluateurs as $evaluateur){
@@ -258,8 +241,50 @@ class SoutenanceController extends AbstractController
             $note->setNote(floatval($request->request->get('id-'.$etudiant->getId())));
         }
         $this->em->flush();
+
+        $this->addFlash('success', 'Note Enregistrés');
         return $this->redirectToRoute('soutenance_note_show',['id' => $soutenance->getId()]);
     }
+    /**
+     * @Route("/soutenance/{id}/rendu", name="soutenance_rendu_note_show")
+     */
+    public function showRenduAction(Soutenance $soutenance)
+    {
+        if($soutenance->getProf()->getId() == $this->getUser()->getProf()->getId())
+            $all = true;
+        else
+            $all = false;
+        $etudiants = $soutenance->getModule()->getFiliere()->getEtudiants();
+        $rep = $this->em->getRepository(Rendu::class);
+        foreach ($etudiants as $etudiant){
+            $rendu = $rep->findOneBy(['soutenance'=>$soutenance,'etudiant' => $etudiant]);
+                    $rendus[$etudiant->getId()] = $rendu;
+        }
+        return $this->render('soutenance/showRendu.html.twig', [
+            'etudiants' => $etudiants,
+            'soutenance' => $soutenance,
+            'rendus' => $rendus,
+            'all' => $all
+        ]);
+    }
+    /**
+     * @Route("/soutenance/{id}/rendu/note/add", name="soutenance_rendu_note_add")
+     */
+    public function addRenduNoteAction(Request $request, Soutenance $soutenance)
+    {
 
+        if($soutenance->getProf()->getId() != $this->getUser()->getProf()->getId())
+            throw new NotFoundHttpException('vous etes pas la bonne personne pour cette action');
 
+        $etudiants = $soutenance->getModule()->getFiliere()->getEtudiants();
+        foreach ($etudiants as $etudiant){
+            $rendu = $this->em->getRepository(Rendu::class)
+                ->findOneBy(['soutenance'=>$soutenance,'etudiant' => $etudiant]);
+            if($rendu != null)
+                $rendu->setNote(floatval($request->request->get('id-'.$etudiant->getId())));
+        }
+        $this->em->flush();
+        $this->addFlash('success', 'Note Enregistrés ');
+        return $this->redirectToRoute('soutenance_rendu_note_show',['id' => $soutenance->getId()]);
+    }
 }

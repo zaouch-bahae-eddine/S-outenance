@@ -162,9 +162,9 @@ class Utilisateur implements UserInterface
     }
 
     /**
-     * @return Admin
+     * @return Admin|null
      */
-    public function getAdmin(): Admin
+    public function getAdmin(): ?Admin
     {
         return $this->admin[0];
     }
@@ -188,9 +188,9 @@ class Utilisateur implements UserInterface
     }
 
     /**
-     * @return Prof
+     * @return Prof | null
      */
-    public function getProf(): Prof
+    public function getProf(): ?Prof
     {
         return $this->prof[0];
     }
@@ -213,9 +213,9 @@ class Utilisateur implements UserInterface
     }
 
     /**
-     * @return Etudiant
+     * @return Etudiant | null
      */
-    public function getEtudiant(): Etudiant
+    public function getEtudiant(): ?Etudiant
     {
         return $this->etudiant[0];
     }

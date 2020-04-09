@@ -34,7 +34,10 @@
                                         <a href="{{ asset(rendu.rendu|replace({"/public": ""})) }}" target="_blank" >{{ rendu.nameFile }}</a>
                                     </td>
                                     <td>
+
+                                    {% if rendu.note != null %}
                                         <a href="{{ path('rendu_delete', {'id': soutenance.id, 'rendu': rendu.id}) }}"><i class="fas fa-trash"></i></a>
+                                     {% endif %}
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -104,12 +107,29 @@
                                         {% endif %}
                                         {% for note in notesSoutenance[soutenance.id] %}
                                             <div class="h6 mb-0 font-weight-bold text-gray-700">
-                                            Notes
+                                            Notes Soutenance
                                                 <ul>
                                                     <li>Professeur {{ note.prof.compte.nom }} {{ note.prof.compte.prenom }} {{ note.note }}/20</li>
                                                 </ul>
                                             </div>
                                         {% endfor %}
+                                        {% set i = 0 %}
+
+                                        {% if rendusBySoutenance[soutenance.id]|length != 0 %}
+                                                <div class="h6 mb-0 font-weight-bold text-gray-700">
+                                                Rendu
+                                                    <ul style="list-style-type: none;">
+                                            {% endif %}
+                                        {% for rendu in rendusBySoutenance[soutenance.id] %}
+                                                        <li style="margin-bottom: 3px;"><img src="{{ asset('img/report.png') }}" width="17px" height="20px">
+                                                            <a href="{{ asset(rendu.rendu|replace({"/public": ""})) }}" target="_blank" >{{ rendu.nameFile }}</a>{% if rendu.note != null %} note: {{ rendu.note }}/20{% endif %}
+                                                        </li>
+                                            {% set i = i+1 %}
+                                        {% endfor %}
+                                        {% if rendusBySoutenance[soutenance.id]|length != 0 %}
+                                                    </ul>
+                                                </div>
+                                            {% endif %}
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-clock fa-2x text-gray-300"></i>
@@ -127,7 +147,11 @@
         <div class="notifyS">
             {{ message }}
         </div>
-
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="notifyE">
+            {{ message }}
+        </div>
     {% endfor %}
 
 {% endblock %}

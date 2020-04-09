@@ -43,6 +43,7 @@ class SoutenanceEtudiantController extends AbstractController
 
         $etudiant = $this->getUser()->getEtudiant();
         $rep = $this->em->getRepository(Soutenance::class);
+        $repRendu = $this->em->getRepository(Rendu::class);
         foreach ($etudiant->getFiliere()->getModules() as $module){
             $soutenancesCourantes = $rep->findSoutenancesByModule($module->getId());
             foreach ($soutenancesCourantes as $soutenaceByModule){
@@ -60,11 +61,11 @@ class SoutenanceEtudiantController extends AbstractController
                     }
             }
             $soutenancesByModule[$module->getId()] = $soutenancesCourantes;
-            foreach ($soutenancesCourantes as $sou)
+            foreach ($soutenancesCourantes as $sou){
                 $notesSoutenance[$sou->getId()] = $this->em->getRepository(Note::class)->findBy(['soutenance' => $sou, 'etudiant' => $this->getUser()->getEtudiant()]);
-
+                $rendusBySoutenance[$sou->getId()] = $repRendu->findRenduBySoutenanceAndEtudiant($this->getUser()->getEtudiant(), $sou->getId());
+            }
         }
-        $repRendu = $this->em->getRepository(Rendu::class);
         if($soutenance){
             $mesRendus = $repRendu->findRenduBySoutenanceAndEtudiant($this->getUser()->getEtudiant(), $soutenance->getId());
             return $this->render('soutenance_etudiant/showSoutenanceEtudiant.html.twig', [
@@ -76,6 +77,7 @@ class SoutenanceEtudiantController extends AbstractController
                 'soutenance' => $soutenance,
                 'mesRendus' => $mesRendus,
                 'notesSoutenance' => $notesSoutenance,
+                'rendusBySoutenance' => $rendusBySoutenance,
             ]);
         }else{
             return $this->render('soutenance_etudiant/showSoutenanceEtudiant.html.twig', [
@@ -87,6 +89,7 @@ class SoutenanceEtudiantController extends AbstractController
                 'soutenance' => $soutenance,
                 'mesRendus' => [],
                 'notesSoutenance' => $notesSoutenance,
+                'rendusBySoutenance' => $rendusBySoutenance,
             ]);
         }
     }
@@ -116,14 +119,19 @@ class SoutenanceEtudiantController extends AbstractController
     */
     public function deleteRenduAction(Soutenance $soutenance = null, Rendu $rendu = null)
     {
-        $path = $rendu->getRendu();
-        $this->em->remove($rendu);
-        $this->em->flush();
-        if(file_exists($this->getParameter('rendu_directory').$path)
-            &&
-            $this->getParameter('rendu_directory')!=$this->getParameter('rendu_directory').$path){
-            unlink($this->getParameter('rendu_directory').$path);
+        if($rendu->getNote() != null){
+            $path = $rendu->getRendu();
+            $this->em->remove($rendu);
+            $this->em->flush();
+            if(file_exists($this->getParameter('rendu_directory').$path)
+                &&
+                $this->getParameter('rendu_directory')!=$this->getParameter('rendu_directory').$path){
+                unlink($this->getParameter('rendu_directory').$path);
+            }
         }
+        else
+
+            $this->addFlash('error', 'impossible de supprimer un rendu aprés sont évaluuation!');
         return $this->redirectToRoute('rendu_set', ['id' => $soutenance->getId()]);
     }
     /**

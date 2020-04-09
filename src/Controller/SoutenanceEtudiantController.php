@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Creneau;
+use App\Entity\Note;
 use App\Entity\Rendu;
 use App\Entity\Soutenance;
 use App\Form\RenduFormType;
@@ -59,6 +60,9 @@ class SoutenanceEtudiantController extends AbstractController
                     }
             }
             $soutenancesByModule[$module->getId()] = $soutenancesCourantes;
+            foreach ($soutenancesCourantes as $sou)
+                $notesSoutenance[$sou->getId()] = $this->em->getRepository(Note::class)->findBy(['soutenance' => $sou, 'etudiant' => $this->getUser()->getEtudiant()]);
+
         }
         $repRendu = $this->em->getRepository(Rendu::class);
         if($soutenance){
@@ -71,6 +75,7 @@ class SoutenanceEtudiantController extends AbstractController
                 'setModel' => true,
                 'soutenance' => $soutenance,
                 'mesRendus' => $mesRendus,
+                'notesSoutenance' => $notesSoutenance,
             ]);
         }else{
             return $this->render('soutenance_etudiant/showSoutenanceEtudiant.html.twig', [
@@ -81,6 +86,7 @@ class SoutenanceEtudiantController extends AbstractController
                 'setModel' => false,
                 'soutenance' => $soutenance,
                 'mesRendus' => [],
+                'notesSoutenance' => $notesSoutenance,
             ]);
         }
     }
@@ -150,11 +156,11 @@ class SoutenanceEtudiantController extends AbstractController
                 ->addEtudiant($this->getUser()->getEtudiant())
             ;
             $this->em->flush();
-            $this->addFlash('success', 'Créneu choisi ^^ ');
+            $this->addFlash('success', 'Créneau choisi !');
             return $this->redirectToRoute('soutenance_etudiant_show');
         }
 
-        $this->addFlash('warning', 'Le créneau que vous avez choisi est déjà plein !');
+        $this->addFlash('error', 'Le créneau que vous avez choisi est déjà plein vous devez choisir un autre créneau!');
         return $this->redirectToRoute('soutenance_creneau_etudiant_show', ['id' => $soutenance->getId()]);
     }
 }

@@ -1,0 +1,104 @@
+<!DOCTYPE>
+<html>
+<head>
+    <title>Planning</title>
+    <style>
+        body{
+            display: flex;
+            justify-items: center;
+            flex-direction: column;
+            align-items: center;
+        }
+        table{
+            border-collapse: collapse;
+            width:90%;
+        }
+        th,td {
+            padding: 15px 0 15px 10px;
+        }
+        table.unstyledTable {
+            font-family: Tahoma, Geneva, sans-serif;
+            border: 1px solid #000000;
+            text-align: left;
+            border-collapse: collapse;
+        }
+        table.unstyledTable td, table.unstyledTable th {
+            border: 1px solid #AAAAAA;
+            padding: 8px 10px;
+        }
+        table.unstyledTable thead {
+            background: #D0D8DD;
+        }
+        table.unstyledTable thead th {
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Planing des Soutenance</h1>
+    <button id="print">click to print</button>
+    <table border="1" id="table-show" class="unstyledTable">
+        <thead>
+        <tr>
+            <th rowspan="2">Soutenance</th>
+            <th colspan="4">Créneaux</th>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <th>Heure</th>
+            <th>Durée</th>
+            <th>Salle</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for soutenance in soutenances %}
+            <tr>
+                <td {% if soutenance.creneaus|length>0 %} rowspan="{{ soutenance.creneaus|length }}"{% endif %}>{{ soutenance.nom }}</td>
+                {% if soutenance.creneaus|length>0 %}
+                    {% set i = 0 %}
+                {% for creneau in soutenance.creneaus %}
+                    {% if i>0 %}
+                        </tr>
+                        <tr>
+                    {% endif %}
+                    {% set i=i+1 %}
+                        <td>{{ creneau.date|date("d/m/Y") }}</td>
+                        <td>{{ creneau.heure|date("H:i") }}</td>
+                        <td>{{ creneau.duree }}h</td>
+                        <td>
+                            {% set n=0 %}
+                            {% for salle in creneau.salles %}
+                                {{ salle.nom }}
+                                {% if n<creneau.salles|length - 1%}-{% endif %}
+                                {% set n=n+1 %}
+                            {% endfor %}
+
+                        </td>
+                    </tr>
+
+                {% endfor %}
+                {% else %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <script src='https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js'></script>
+    <script>
+        document.querySelector("#print").addEventListener("click",(e)=>{
+            e.currentTarget.style.display="none";
+            html2pdf(document.querySelector("body"),{
+                filename:"Hellopetty.pdf"
+            }).then(()=>{
+                e.target.style.display="block";
+            });
+        });
+    </script>
+</body>
+</html>

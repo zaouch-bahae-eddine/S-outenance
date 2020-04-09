@@ -3,7 +3,15 @@
 {% block title %}Soutenance{% endblock %}
 
 {% block content %}
+<style>
 
+        table{
+            width:90%;
+        }
+        td {
+            padding: 15px 0 15px 10px;
+        }
+</style>
     <!-- Modal modifier Soutenance first form-->
     <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -17,11 +25,20 @@
                 {% if setModel == true %}
                     {{ form_start(form, {'action': path('rendu_add_set', {'id': soutenance.id}), 'method': 'POST',"multipart":"multipart/form-data"}) }}
                     <div class="modal-body">
-                        <ul>
+                        <table>
                             {% for rendu in mesRendus %}
-                                <li><a href="{{ asset(rendu.rendu|replace({"/public": ""})) }}" target="_blank" >{{ rendu.nameFile }}</a> <a href="{{ path('rendu_delete', {'id': soutenance.id, 'rendu': rendu.id}) }}">remove</a></li>
+                                <tr>
+                                    <td >
+
+                                    <img src="{{ asset('img/report.png') }}" width="17px" height="20px">
+                                        <a href="{{ asset(rendu.rendu|replace({"/public": ""})) }}" target="_blank" >{{ rendu.nameFile }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('rendu_delete', {'id': soutenance.id, 'rendu': rendu.id}) }}"><i class="fas fa-trash"></i></a>
+                                    </td>
+                                </tr>
                             {% endfor %}
-                        </ul>
+                        </table>
                         <input type="file" name="renduFile" required="required"/>
                     </div>
                     <div class="modal-footer">
@@ -76,9 +93,23 @@
                                         </div>
                                         {% if canShow[soutenance.id]['bool'] != true %}
                                             <div class="h6 mb-0 font-weight-bold text-gray-700">
-                                                Mon Créneau: {{ canShow[soutenance.id]['creneau'].date|date("d/m/Y") }} {{ canShow[soutenance.id]['creneau'].heure|date('H:i') }} durée: {{ canShow[soutenance.id]['creneau'].duree }}h
+                                                Mon Créneau: {{ canShow[soutenance.id]['creneau'].date|date("d/m/Y") }} {{ canShow[soutenance.id]['creneau'].heure|date('H:i') }} durée: {{ canShow[soutenance.id]['creneau'].duree }}h<br>
+                                                Salle
+                                                <ul>
+                                                    {% for salle in canShow[soutenance.id]['creneau'].salles %}
+                                                        <li>{{ salle.nom }}</li>
+                                                    {% endfor %}
+                                                </ul>
                                             </div>
                                         {% endif %}
+                                        {% for note in notesSoutenance[soutenance.id] %}
+                                            <div class="h6 mb-0 font-weight-bold text-gray-700">
+                                            Notes
+                                                <ul>
+                                                    <li>Professeur {{ note.prof.compte.nom }} {{ note.prof.compte.prenom }} {{ note.note }}/20</li>
+                                                </ul>
+                                            </div>
+                                        {% endfor %}
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-clock fa-2x text-gray-300"></i>
@@ -93,7 +124,7 @@
     </div>
     <!-- /.container-fluid-->
     {% for message in app.flashes('success') %}
-        <div class="alert alert-success">
+        <div class="notifyS">
             {{ message }}
         </div>
 

@@ -39,14 +39,32 @@ class SoutenanceController extends AbstractController
      */
     public function showSoutenanceAction(Soutenance $soutenance = null, $nb = 0)
     {
+        //ghalat!! rah yjib ga3 les soutenances
         $formVide = $this->createForm(SoutenanceBaseFormType::class);
         $form = $this->createForm(SoutenanceBaseFormType::class,$soutenance);
         $formEvaluateur = $this->createForm(SoutenanceEvaluateurFormType::class,$soutenance);
         $repository  = $this->em->getRepository(Soutenance::class);
         $soutenances = $repository->findAll();
+        $i = 0;
+        foreach ($soutenances as $sou){
+            if($sou->getProf()->getId() == $this->getUser()->getProf()->getId()){
+                $soutenanceTab[$i] = $sou;
+                $mySoutenance[$sou->getId()] = 1;
+                $i++;
+            }
+            else
+                foreach ($soutenance->getEvaluateurs() as $evaluateur){
+                    if($evaluateur->getId() == $this->getUser()->getProf()->getId()){
+                        $soutenanceTab[$i] = $sou;
+                        $mySoutenance[$sou->getId()] = 0;
+                        $i++;
+                    }
+                }
+        }
         if(!$soutenance)
             return $this->render('soutenance/showSoutenance.html.twig', [
-                'soutenances' => $soutenances,
+                'soutenances' => $soutenanceTab,
+                'mySoutenance' => $mySoutenance,
                 'soutenanceForm' => $formVide->createView(),
                 'soutenanceFormSet' =>$form->createView(),
                 'soutenanceEvaluateurFormSet' => $formEvaluateur->createView(),
@@ -54,7 +72,8 @@ class SoutenanceController extends AbstractController
                 'setModel' => false,
             ]);
         return $this->render('soutenance/showSoutenance.html.twig', [
-            'soutenances' => $soutenances,
+            'soutenances' => $soutenanceTab,
+            'mySoutenance' => $mySoutenance,
             'soutenanceForm' => $formVide->createView(),
             'soutenanceFormSet' =>$form->createView(),
             'soutenanceEvaluateurFormSet' => $formEvaluateur->createView(),
@@ -71,10 +90,10 @@ class SoutenanceController extends AbstractController
     {
 
         $form = null;
-        if($nb == 0)
+        if($nb == 1)
             $form = $this->createForm(SoutenanceBaseFormType::class);
 
-        if($nb == 1)
+        if($nb == 2)
             $form = $this->createForm(SoutenanceEvaluateurFormType::class);
         $form->handleRequest($request);
         if(($form->isSubmitted() && $form->isValid())){
@@ -87,11 +106,11 @@ class SoutenanceController extends AbstractController
                 $msg = "ajouté";
             }
             else{
-                if($nb == 0)
+                if($nb == 1)
                     $soutenance->setNom($form->getData()->getNom())
                         ->setAlerte($form->getData()->getAlerte())
                         ->setModule($form->getData()->getModule());
-                if($nb == 1){
+                if($nb == 2){
                     $evaluateurs = $soutenance->getEvaluateurs();
                     foreach ($evaluateurs as $evaluateur){
                         $soutenance->removeEvaluateur($evaluateur);
@@ -286,5 +305,59 @@ class SoutenanceController extends AbstractController
         $this->em->flush();
         $this->addFlash('success', 'Note Enregistrés ');
         return $this->redirectToRoute('soutenance_rendu_note_show',['id' => $soutenance->getId()]);
+    }
+    /**
+     * @Route("/soutenance/impression", name="soutenance_impression")
+     */
+    public function impression(Request $request){
+        $soutenances = $this->em->getRepository(Soutenance::class)->findAll();
+        $i = 0;
+        foreach ($soutenances as $soutenance){
+            if($soutenance->getProf()->getId() == $this->getUser()->getProf()->getId()){
+                $soutenanceTab[$i] = $soutenance;
+                $i++;
+            }
+            else
+            foreach ($soutenance->getEvaluateurs() as $evaluateur){
+                if($evaluateur->getId() == $this->getUser()->getProf()->getId()){
+                    $soutenanceTab[$i] = $soutenance;
+                    $i++;
+                }
+            }
+        }
+        return $this->render('imprimer/planning.html.twig',[
+            'soutenances' => $soutenanceTab,
+        ]);
+    }
+    /**
+     * @Route("/soutenance/{id}/alerte", name="alerte_etudiant")
+     */
+    public function alerteEtudiant(Request $request, Soutenance $soutenance, \Swift_Mailer $mailer)
+    {
+        $etudiants = $soutenance->getModule()->getFiliere()->getEtudiants();
+        foreach ($etudiants as $etudiant){
+            $message = (new \Swift_Message('Alerte Soutenance Plate-forme'))
+                ->setFrom([$etudiant->getCompte()->getEmail() => 'Alerte@ne-pas-repondre.fr'])
+                ->setTo($etudiant->getCompte()->getMailPerso())
+                ->setBody(
+                    $this->renderView(
+                    // templates/emails/registration.html.twig
+                        'email/alerte.html.twig',
+                        [
+                            'nom' => $etudiant->getCompte()->getNom(),
+                            'prenom' => $etudiant->getCompte()->getPrenom(),
+                            'messageProf' => $request->request->get('msg-alerte'),
+                            'nomProf' => $this->getUser()->getNom(),
+                            'prenomProf'=> $this->getUser()->getPrenom(),
+                            'soutenance' => $soutenance->getNom(),
+                        ]
+                    ),
+                    'text/html'
+                );
+            $mailer->send($message);
+        }
+
+        $this->addFlash('success', 'Message Envoyé !');
+        return $this->redirectToRoute('soutenance_show');
     }
 }

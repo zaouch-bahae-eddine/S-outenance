@@ -3,13 +3,12 @@
 {% block title %}Soutenance{% endblock %}
 
 {% block content %}
-
     <!-- Modal Ajouter Filière-->
     <div class="modal fade" id="addModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLongTitle">Ajouter salle</h5>
+                    <h5 class="modal-title" id="addModalLongTitle">Ajouter Soutenance</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -31,16 +30,16 @@
     <!--Modal Ajouter Filière-->
 
     <!-- Modal modifier Soutenance first form-->
-    <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="setModele1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLongTitle">Modifier salle</h5>
+                    <h5 class="modal-title" id="addModalLongTitle">Modifier soutenance</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                {{ form_start(soutenanceFormSet, {'action': path('soutenance_add_set',{'id': idSoutenance, 'nb': 0}), 'method': 'POST'}) }}
+                {{ form_start(soutenanceFormSet, {'action': path('soutenance_add_set',{'id': idSoutenance, 'nb': 1}), 'method': 'POST'}) }}
                 <div class="modal-body">
                     {{ form_widget(soutenanceFormSet.nom) }}
                     {{ form_widget(soutenanceFormSet.alerte) }}
@@ -65,7 +64,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                {{ form_start(soutenanceEvaluateurFormSet, {'action': path('soutenance_add_set',{'id': idSoutenance, 'nb': 1}), 'method': 'POST'}) }}
+                {{ form_start(soutenanceEvaluateurFormSet, {'action': path('soutenance_add_set',{'id': idSoutenance, 'nb': 2}), 'method': 'POST'}) }}
                 <div class="modal-body">
                     {{ form_widget(soutenanceEvaluateurFormSet.evaluateurs) }}
                 </div>
@@ -78,7 +77,33 @@
         </div>
     </div>
     <!-- Modal modifier Soutenance first form-->
-
+    <!-- Modal modifier Soutenance 3 form-->
+    <div class="modal fade" id="setModele3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLongTitle">Alértes pour les étudiants</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ path('alerte_etudiant',{'id': idSoutenance}) }}" method="post">
+                <div class="modal-body">
+                    <p> Votre message vas être envoyer automatiqueme à tous les étudiants concernés pare cette soutenance</p>
+                    <div class="form-group">
+                        <label for="exampleFormControlTextarea1">Message d'alerte</label>
+                        <textarea class="form-control" id="msg-alerte" name="msg-alerte" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Envoyer</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal modifier Soutenance first form-->
     <!-- Begin Page Content -->
     <div class="container-fluid">
 
@@ -88,14 +113,16 @@
             <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
                 <i class="fas fa-plus fa-sm text-white-50"></i> Nouveau Soutenance
             </button>
+            <button id="print-btn" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" type="button" class="btn btn-primary" >
+                <i class="fas fa-plus fa-sm text-white-50"></i> Générer le planning
+            </button>
         </div>
         <div class="row">
             {% for soutenance in soutenances %}
 
-
                     <!-- Earnings (Monthly) Card Example -->
                     <div class="col-xl-6 col-md-6 mb-6" style="margin-top: 20px;">
-                        <div class="card border-left-primary shadow h-100 py-2">
+                        <div class="card {% if mySoutenance[soutenance.id] == 1 %}border-left-primary{% else %}border-left-success{% endif %}  shadow h-100 py-2">
                             <div class="dropdown no-arrow" style="position: absolute; right: 0;">
                                 <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                     style="padding: 10px; font-size: 20px;"
@@ -104,11 +131,12 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                     <div class="dropdown-header">Gestion Soutenance</div>
-                                    <a class="dropdown-item" href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 1}) }}">Edit</a>
+                                    <a class="dropdown-item" href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 1}) }}">Modifier</a>
                                     <a class="dropdown-item" href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 2}) }}">Evaluateurs</a>
                                     <a class="dropdown-item" href="{{ path('soutenance_creneau_show', {'id': soutenance.id} ) }}">Créneaux</a>
                                     <a class="dropdown-item" href="{{ path('soutenance_rendu_note_show', {'id': soutenance.id} ) }}">Rendus</a>
                                     <a class="dropdown-item" href="{{ path('soutenance_note_show', {'id': soutenance.id} ) }}">Notes</a>
+                                    <a class="dropdown-item" href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 3}) }}">Alertes</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">Delete</a>
                                 </div>
@@ -132,7 +160,7 @@
     </div>
     <!-- /.container-fluid-->
     {% for message in app.flashes('success') %}
-        <div class="alert alert-success">
+        <div class="notifyS" data-notification-status="success">
             {{ message }}
         </div>
 
@@ -145,10 +173,17 @@
             <script>
                 const $=jQuery;
                 {% if nb == 1 %}
-                    $('#setModele').modal('show');
+                    $('#setModele1').modal('show');
                 {% elseif nb == 2 %}
                 $('#setModele2').modal('show');
+                {% elseif nb == 3 %}
+                $('#setModele3').modal('show');
                 {% endif %}
             </script>
         {% endif %}
+        <script>
+            $("#print-btn").click((e)=>{
+                open('{{ path("soutenance_impression") }}', 'test', `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,width=1000px,height=700px,left=0,top=0`);
+            });
+        </script>
     {% endblock %}

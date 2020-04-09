@@ -88,9 +88,9 @@ class SoutenanceController extends AbstractController
      */
     public function addSoutenanceAction(Request $request, Soutenance $soutenance = null, $nb = 0)
     {
-
+/*
         $form = null;
-        if($nb == 1)
+        if($nb == 1)*/
             $form = $this->createForm(SoutenanceBaseFormType::class);
 
         if($nb == 2)
@@ -276,7 +276,7 @@ class SoutenanceController extends AbstractController
         $etudiants = $soutenance->getModule()->getFiliere()->getEtudiants();
         $rep = $this->em->getRepository(Rendu::class);
         foreach ($etudiants as $etudiant){
-            $rendu = $rep->findOneBy(['soutenance'=>$soutenance,'etudiant' => $etudiant]);
+            $rendu = $rep->findBy(['soutenance'=>$soutenance,'etudiant' => $etudiant]);
                     $rendus[$etudiant->getId()] = $rendu;
         }
         return $this->render('soutenance/showRendu.html.twig', [
@@ -297,10 +297,10 @@ class SoutenanceController extends AbstractController
 
         $etudiants = $soutenance->getModule()->getFiliere()->getEtudiants();
         foreach ($etudiants as $etudiant){
-            $rendu = $this->em->getRepository(Rendu::class)
-                ->findOneBy(['soutenance'=>$soutenance,'etudiant' => $etudiant]);
-            if($rendu != null)
-                $rendu->setNote(floatval($request->request->get('id-'.$etudiant->getId())));
+            $rendus = $this->em->getRepository(Rendu::class)->findBy(['soutenance'=>$soutenance,'etudiant' => $etudiant]);
+            foreach ($rendus as $rendu){
+                $rendu->setNote(floatval($request->request->get('id-'.$rendu->getId())));
+            }
         }
         $this->em->flush();
         $this->addFlash('success', 'Note Enregistrés ');
@@ -356,8 +356,31 @@ class SoutenanceController extends AbstractController
                 );
             $mailer->send($message);
         }
-
         $this->addFlash('success', 'Message Envoyé !');
         return $this->redirectToRoute('soutenance_show');
+    }
+
+    /**
+     * @Route("/soutenance/{id}/romove",name="remove_soutenance")
+     */
+    public function removeSoutenance(Soutenance $soutenance = null){
+        if($soutenance != null){
+            $rendus = $soutenance->getRendus();
+            foreach ($rendus as $rendu){
+                $path = $rendu->getRendu();
+                $this->em->remove($rendu);
+                $this->em->flush();
+                if(file_exists($this->getParameter('rendu_directory').$path)
+                    &&
+                    $this->getParameter('rendu_directory')!=$this->getParameter('rendu_directory').$path){
+                    unlink($this->getParameter('rendu_directory').$path);
+                }
+
+            }
+            $this->em->remove($soutenance);
+        }
+        $this->em->flush();
+        $this->addFlash('success', 'Soutenance Supprimé !');
+        return $this->redirectToRoute("soutenance_show");
     }
 }

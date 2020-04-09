@@ -119,7 +119,7 @@ class SoutenanceEtudiantController extends AbstractController
     */
     public function deleteRenduAction(Soutenance $soutenance = null, Rendu $rendu = null)
     {
-        if($rendu->getNote() != null){
+        if($rendu->getNote() == null){
             $path = $rendu->getRendu();
             $this->em->remove($rendu);
             $this->em->flush();
@@ -130,7 +130,6 @@ class SoutenanceEtudiantController extends AbstractController
             }
         }
         else
-
             $this->addFlash('error', 'impossible de supprimer un rendu aprés sont évaluuation!');
         return $this->redirectToRoute('rendu_set', ['id' => $soutenance->getId()]);
     }

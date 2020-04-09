@@ -11,6 +11,21 @@
         td {
             padding: 15px 0 15px 10px;
         }
+        .clock-s{
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            text-align: right;
+            margin: 0;
+            padding: 0;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+        .fa-clock{
+            padding: 10px 50%;
+        }
 </style>
     <!-- Modal modifier Soutenance first form-->
     <div class="modal fade" id="setModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -35,7 +50,7 @@
                                     </td>
                                     <td>
 
-                                    {% if rendu.note != null %}
+                                    {% if rendu.note == null %}
                                         <a href="{{ path('rendu_delete', {'id': soutenance.id, 'rendu': rendu.id}) }}"><i class="fas fa-trash"></i></a>
                                      {% endif %}
                                     </td>
@@ -60,9 +75,11 @@
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Mes Soutenances</h1>
+        <h1 class="h3 mb-2 text-gray-800"  style="width: 80%; margin: 0 auto; padding: 0 20px">
+        <img src="{{ asset('img/coach.png') }}" width="50px" height="45px" >
+        Mes Soutenances</h1>
 
-        <div class="row">
+        <div class="row" style="width: 80%; margin: 0 auto;">
         {% for module in modules %}
                     {% for soutenance in soutenancesByModule[module.id] %}
                     <div class="col-xl-6 col-md-6 mb-6" style="margin-top: 20px;">
@@ -131,7 +148,7 @@
                                                 </div>
                                             {% endif %}
                                     </div>
-                                    <div class="col-auto">
+                                    <div class="col-auto clock-s">
                                         <i class="fas fa-clock fa-2x text-gray-300"></i>
                                     </div>
                                 </div>

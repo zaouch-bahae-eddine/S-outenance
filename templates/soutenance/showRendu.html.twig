@@ -7,7 +7,7 @@
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">Gestion Note</h1>
+        <h1 class="h3 mb-2 text-gray-800">Gestion Notes des rendux </h1>
         <h1 class="h3 mb-2 text-blue-900"  style="text-align: center;color: #4e73df ;">{{ soutenance.nom }}</h1>
 
         <!-- DataTales Example -->
@@ -44,45 +44,56 @@
                             <tbody>
 
                             {% for etudiant in etudiants %}
-                                <tr>
-                                    <td>{{ etudiant.compte.nom }}</td>
-                                    <td>{{ etudiant.compte.prenom }}</td>
-                                    <td>
-                                        {% if rendus[etudiant.id] != null %}
-                                          <a class="d-flex align-items-center" href="{{ asset(rendus[etudiant.id].rendu|replace({"/public": ""})) }}" target="_blank">
-                                                <div class="mr-2">
-                                                    <div class="icon-circle bg-primary">
-                                                        <i class="fas fa-file-alt text-white"></i>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <span class="font-weight-bold">{{ rendus[etudiant.id].nameFile }}</span>
-                                                </div>
-                                            </a>
-                                        {% else %}
-                                            <div class="d-flex align-items-center">
-                                                    <div class="icon-circle bg-warning  mr-2">
-                                                        <i class="fas fa-exclamation-triangle text-white"></i>
-                                                    </div>
-                                                    <div>
-                                                        <span class="font-weight-bold">Auccun fichier déposé</span>
-                                                    </div>
+
+
+
+                                {% if rendus[etudiant.id]|length == 0 %}
+                            <tr>
+                                <td>{{ etudiant.compte.nom }}</td>
+                                <td>{{ etudiant.compte.prenom }}</td>
+                                <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="icon-circle bg-warning  mr-2">
+                                                <i class="fas fa-exclamation-triangle text-white"></i>
                                             </div>
-                                        {% endif %}
+                                            <div>
+                                                <span class="font-weight-bold">Auccun fichier déposé</span>
+                                            </div>
+                                        </div>
                                     </td>
                                     {% if all == true %}
-                                        <td >
+                                    <td >
 
-                                                <input class="form-control" id="id-{{ etudiant.id }}" name="id-{{ etudiant.id }}" type="text"
-                                                    {% if rendus[etudiant.id] != null %}
-                                                       value="{{ rendus[etudiant.id].note + 0 }}"
-                                                    {% else %}
-                                                        value="0"
-                                                    {% endif %}
-                                                            />
-                                        </td>
+                                        <input class="form-control" id="id-r" name="id-r" type="text" value="0"/>
+
+                                    </td>
                                     {% endif %}
                                 </tr>
+                            {% else %}
+                                {% for rendu in rendus[etudiant.id] %}
+                                    <tr>
+                                        <td>{{ etudiant.compte.nom }}</td>
+                                        <td>{{ etudiant.compte.prenom }}</td>
+                                        <td>
+                                              <a class="d-flex align-items-center" href="{{ asset(rendu.rendu|replace({"/public": ""})) }}" target="_blank">
+                                                    <div class="mr-2">
+                                                        <div class="icon-circle bg-primary">
+                                                            <i class="fas fa-file-alt text-white"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <span class="font-weight-bold">{{ rendu.nameFile }}</span>
+                                                    </div>
+                                                </a>
+                                        </td>
+                                        {% if all == true %}
+                                            <td >
+                                                <input class="form-control" id="id-{{ rendu.id }}" name="id-{{ rendu.id }}" type="text" value="{{ rendu.note + 0 }}"/>
+                                            </td>
+                                        {% endif %}
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
                             {% endfor %}
                             </tbody>
                         </table>

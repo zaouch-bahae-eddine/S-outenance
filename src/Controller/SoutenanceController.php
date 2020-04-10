@@ -371,22 +371,40 @@ class SoutenanceController extends AbstractController
      */
     public function removeSoutenance(Soutenance $soutenance = null){
         if($soutenance != null){
-            $rendus = $soutenance->getRendus();
-            foreach ($rendus as $rendu){
-                $path = $rendu->getRendu();
-                $this->em->remove($rendu);
-                $this->em->flush();
-                if(file_exists($this->getParameter('rendu_directory').$path)
-                    &&
-                    $this->getParameter('rendu_directory')!=$this->getParameter('rendu_directory').$path){
-                    unlink($this->getParameter('rendu_directory').$path);
-                }
+            $msg = null;
+            if($soutenance->getProf()->getId() == $this->getUser()->getProf()->getId())
+            {
+                $msg = "Soutenance supprimé !";
+                $rendus = $soutenance->getRendus();
+                foreach ($rendus as $rendu){
+                    $path = $rendu->getRendu();
+                    $this->em->remove($rendu);
+                    $this->em->flush();
+                    if(file_exists($this->getParameter('rendu_directory').$path)
+                        &&
+                        $this->getParameter('rendu_directory')!=$this->getParameter('rendu_directory').$path){
+                        unlink($this->getParameter('rendu_directory').$path);
+                    }
 
+                }
+                $this->em->remove($soutenance);
+            }else {
+                foreach ($soutenance->getEvaluateurs() as $evaluateur){
+                    if($evaluateur->getId() == $this->getUser()->getProf()->getId()){
+                        $soutenance->removeEvaluateur($this->getUser()->getProf());
+                        $this->em->persist($soutenance);
+                        $msg = "Je me suis retiré du groupe des évaluateurs pour la soutenance".$soutenance->getNom()." !";
+                    }
+                }
             }
-            $this->em->remove($soutenance);
+        }else{
+            throw new NotFoundHttpException("Cette soutenance nexiste pas! ");
         }
+        if($msg == null)
+            throw new NotFoundHttpException("je suis pas concerné par cette soutenance ! ");
+
         $this->em->flush();
-        $this->addFlash('success', 'Soutenance Supprimé !');
+        $this->addFlash('success', $msg);
         return $this->redirectToRoute("soutenance_show");
     }
 }

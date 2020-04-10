@@ -29,7 +29,7 @@ class Note
     private $prof;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="float")
      */
     private $note;
 
@@ -68,7 +68,7 @@ class Note
         return $this;
     }
 
-    public function getNote(): ?int
+    public function getNote(): ?float
     {
         return $this->note;
     }

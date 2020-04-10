@@ -96,11 +96,11 @@ class SalleController extends AbstractController
     public function removeSalleAction(Salle $salle)
     {
         if(!$salle)
-            throw new NotFoundHttpException('Auccun diplome a supprimer');
+            throw new NotFoundHttpException('Auccune Salle a supprimer');
         $this->em->remove($salle);
         $this->em->flush();
 
-        $this->addFlash('success', 'Salle supprimé');
+        $this->addFlash('success', 'Salle supprimé !');
         return $this->redirectToRoute('salle_show');
     }
 }

@@ -44,6 +44,10 @@ class SoutenanceEtudiantController extends AbstractController
         $etudiant = $this->getUser()->getEtudiant();
         $rep = $this->em->getRepository(Soutenance::class);
         $repRendu = $this->em->getRepository(Rendu::class);
+        $soutenanceShow = null;
+        $notesSoutenance = null;
+        $rendusBySoutenance = null;
+        $soutenancesByModule = null;
         foreach ($etudiant->getFiliere()->getModules() as $module){
             $soutenancesCourantes = $rep->findSoutenancesByModule($module->getId());
             foreach ($soutenancesCourantes as $soutenaceByModule){
@@ -60,7 +64,8 @@ class SoutenanceEtudiantController extends AbstractController
                         break;
                     }
             }
-            $soutenancesByModule[$module->getId()] = $soutenancesCourantes;
+            if($soutenancesCourantes != null)
+                $soutenancesByModule[$module->getId()] = $soutenancesCourantes;
             foreach ($soutenancesCourantes as $sou){
                 $notesSoutenance[$sou->getId()] = $this->em->getRepository(Note::class)->findBy(['soutenance' => $sou, 'etudiant' => $this->getUser()->getEtudiant()]);
                 $rendusBySoutenance[$sou->getId()] = $repRendu->findRenduBySoutenanceAndEtudiant($this->getUser()->getEtudiant(), $sou->getId());

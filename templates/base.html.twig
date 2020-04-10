@@ -23,11 +23,15 @@
             #logo-container {
                 height: 100%;
                 background: #4e73df;
-                width: 300px;
-                padding: 7px;
+                width: 290px;
+                padding: 10px;
                 text-align: center;
             }
             #logo-container >img{
+                height: 100%;
+                width: auto;
+            }
+            #img-logo{
                 height: 100%;
                 width: auto;
             }
@@ -140,9 +144,13 @@
           </form>
       -->
             {% if is_granted('ROLE_ETUDIANT') or is_granted('ROLE_PROF')%}
+
             <div  id="logo-container">
-                <img src="{{ asset('img/logo.png') }}" alt="Logo" >
+                <a href="{{ path('home_page') }}">
+                    <img src="{{ asset('img/logo.png') }}" alt="Logo" id="img-logo">
+                </a>
             </div>
+
             {% endif %}
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
@@ -181,7 +189,7 @@
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 <a class="dropdown-item" href="{{ path('show_compte') }}">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Profile
+                  Profil
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{ path('logout') }}">

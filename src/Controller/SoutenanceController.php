@@ -46,6 +46,8 @@ class SoutenanceController extends AbstractController
         $repository  = $this->em->getRepository(Soutenance::class);
         $soutenances = $repository->findAll();
         $i = 0;
+        $soutenanceTab= null;
+        $mySoutenance = null;
         foreach ($soutenances as $sou){
             if($sou->getProf()->getId() == $this->getUser()->getProf()->getId()){
                 $soutenanceTab[$i] = $sou;
@@ -229,8 +231,10 @@ class SoutenanceController extends AbstractController
                     $note = $rep->findNoteByProfAndSoutenance($etudiant->getId(),$evaluateur->getId(), $soutenance->getId());
                     $tab[$etudiant->getId()][$evaluateur->getId()] = $note == null? 0 : $note->getNote();
                 }
-                $note = $rep->findNoteByProfAndSoutenance($etudiant->getId(),$this->getUser()->getProf()->getId(), $soutenance->getId());
-                $tab[$etudiant->getId()]["me"] = $note == null? 0 : $note->getNote();
+            }
+            if($all) {
+                $note = $rep->findNoteByProfAndSoutenance($etudiant->getId(), $this->getUser()->getProf()->getId(), $soutenance->getId());
+                $tab[$etudiant->getId()]["me"] = $note == null ? 0 : $note->getNote();
             }
         }
             return $this->render('soutenance/showNote.html.twig', [

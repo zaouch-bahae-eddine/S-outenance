@@ -121,13 +121,13 @@ class EtudiantController extends AbstractController
     public function removeEtudiantAction(Etudiant $etudiant)
     {
         if(!$etudiant)
-            throw new NotFoundHttpException('Auccun etudiant a supprimer');
+            throw new NotFoundHttpException('Auccun etudiant a supprimé');
+        $etudiantDeth = $etudiant;
         $this->em->remove($etudiant);
-        $this->em->remove($etudiant->getCompte());
-
+        $this->em->remove($etudiantDeth->getCompte());
         $this->em->flush();
 
-        $this->addFlash('success', 'Etudiant supprimé');
+        $this->addFlash('success', 'Etudiant supprimé !');
         return $this->redirectToRoute('etudiant_show');
     }
     /**
@@ -169,7 +169,7 @@ class EtudiantController extends AbstractController
             }
             $this->em->flush();
             if($i>0)
-            $this->addFlash('success', $i.' Comptes a été génerer et envoyer aux adresse mail personelle de chaqu\'un');
+            $this->addFlash('success', $i.' Comptes a été génerer et envoyer aux adresses personnelles');
         }
         return $this->redirectToRoute('etudiant_show');
     }

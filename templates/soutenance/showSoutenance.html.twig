@@ -3,6 +3,21 @@
 {% block title %}Soutenance{% endblock %}
 
 {% block content %}
+    <style>
+        .First-div{
+            width: 70%;
+            background: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58,59,69,.15);
+            margin: 0 auto;
+            margin-bottom: 25px;
+            margin-top: 100px;
+            height: 100px;
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            font-size: 2em;
+        }
+    </style>
     <!-- Modal Ajouter Filière-->
     <div class="modal fade" id="addModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -121,12 +136,13 @@
         </div>
         <div style="width: 80%; margin: 0 auto;">
             <button style="margin-left: 15px;" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModele">
-                <i class="fas fa-plus fa-sm text-white-50"></i> Nouveau Soutenance
+                <i class="fas fa-plus fa-sm text-white-50"></i> Nouvelle soutenance
             </button>
         </div>
         <div class="row" style="width: 80%; margin: 0 auto;">
+            {% if soutenances|length != 0 %}
             {% for soutenance in soutenances %}
-
+                    {% if soutenance != null %}
                     <!-- Earnings (Monthly) Card Example -->
                     <div class="col-xl-6 col-md-6 mb-6" style="margin-top: 20px;">
                         <div class="card {% if mySoutenance[soutenance.id] == 1 %}border-left-primary{% else %}border-left-success{% endif %}  shadow h-100 py-2">
@@ -162,7 +178,13 @@
                             </div>
                         </div>
                     </div>
+                {% endif %}
             {% endfor %}
+            {% else %}
+                <div class="First-div border-bottom-primary">
+                    <p>Ajouter une soutenance</p>
+                </div>
+            {% endif %}
         </div>
     </div>
     <!-- /.container-fluid-->

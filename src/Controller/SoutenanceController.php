@@ -54,8 +54,8 @@ class SoutenanceController extends AbstractController
                 $mySoutenance[$sou->getId()] = 1;
                 $i++;
             }
-            else if($soutenance != null)
-                foreach ($soutenance->getEvaluateurs() as $evaluateur){
+            else //if($soutenance != null)
+                foreach ($sou->getEvaluateurs() as $evaluateur){
                     if($evaluateur->getId() == $this->getUser()->getProf()->getId()){
                         $soutenanceTab[$i] = $sou;
                         $mySoutenance[$sou->getId()] = 0;

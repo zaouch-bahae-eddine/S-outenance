@@ -36,7 +36,7 @@
                             <td>Prenom</td>
                             {% if all == true %}
                                 {% for evaluateur in soutenance.evaluateurs %}
-                                    <td>{{ evaluateur.compte.nom }} {{ evaluateur.compte.prenom }}</td>
+                                    <td>Professeur: {{ evaluateur.compte.nom }} {{ evaluateur.compte.prenom }}</td>
                                 {% endfor %}
                             {% endif %}
                             <td><button type="submit" class="form-control btn btn-primary">Enregistrer</button> </td>

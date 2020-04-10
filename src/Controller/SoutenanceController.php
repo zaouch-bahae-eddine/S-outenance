@@ -105,7 +105,7 @@ class SoutenanceController extends AbstractController
                  */
                 $soutenance = $form->getData();
                 $soutenance->setProf($this->getUser()->getProf());
-                $msg = "ajouté";
+                $msg = "ajoutée";
             }
             else{
                 if($nb == 1)
@@ -122,7 +122,7 @@ class SoutenanceController extends AbstractController
                         $soutenance->addEvaluateur($evaluateur);
                     }
                 }
-                $msg = "modifié";
+                $msg = "modifiée";
             }
             if(!$soutenance->getNom())
                 throw new NotFoundHttpException('Nom ne peut pas être null');

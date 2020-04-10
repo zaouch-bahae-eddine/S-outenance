@@ -1,11 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello SecurityController!{% endblock %}
+{% block title %}Soutenance Login!{% endblock %}
 {% block stylesheets %}
  {{ parent() }}
     <style>
         html {
             background-color: #224abe !important;
+        }
+        #img-login-pg {
+            width: 100%;
+            margin-top: 10%;
+            border-right: 1px ridge #dedee7;
         }
     </style>
 {% endblock %}
@@ -24,7 +29,9 @@
           <div class="card-body p-0">
             <!-- Nested Row within Card Body -->
             <div class="row">
-              <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+              <div class="col-lg-6 d-none d-lg-block bg-login-image">
+                  <img src="{{ asset('img/background6.png') }}" id="img-login-pg">
+              </div>
               <div class="col-lg-6">
                 <div class="p-5">
                   <div class="text-center">

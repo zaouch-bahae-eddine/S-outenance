@@ -158,8 +158,10 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
                                     <div class="dropdown-header">Gestion Soutenance</div>
-                                    <a class="dropdown-item" href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 1}) }}">Modifier</a>
-                                    <a class="dropdown-item" href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 2}) }}">Evaluateurs</a>
+                                    {% if mySoutenance[soutenance.id] == 1 %}
+                                        <a class="dropdown-item" href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 1}) }}">Modifier</a>
+                                        <a class="dropdown-item" href="{{ path('soutenance_set', {'id': soutenance.id, 'nb': 2}) }}">Evaluateurs</a>
+                                    {% endif %}
                                     <a class="dropdown-item" href="{{ path('soutenance_creneau_show', {'id': soutenance.id} ) }}">Créneaux</a>
                                     <a class="dropdown-item" href="{{ path('soutenance_rendu_note_show', {'id': soutenance.id} ) }}">Rendus</a>
                                     <a class="dropdown-item" href="{{ path('soutenance_note_show', {'id': soutenance.id} ) }}">Notes</a>
@@ -174,6 +176,9 @@
                                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Module: {{ soutenance.module.nom }}, Filiére: {{ soutenance.module.filiere.nom }}, Année: {{ soutenance.module.filiere.annee }} </div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800">{{ soutenance.nom }}</div>
                                         <div class="h6 mb-0 font-weight-bold text-gray-700" style="display: none;">{{ soutenance.alerte|date('d-m-Y') }} {{ soutenance.alerte|date('H:i') }}</div>
+                                        {% if mySoutenance[soutenance.id] == 0 %}
+                                            <div class="h6 mb-0 font-weight-bold text-gray-500" >(Evaluateur)</div>
+                                        {% endif %}
                                     </div>
                                     <div class="col-auto">
                                         <i class="fas fa-clock fa-2x text-gray-300"></i>

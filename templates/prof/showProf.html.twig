@@ -121,8 +121,8 @@
                             <th>Diplôme</th>
                             <th>Filiére</th>
                             <th>Année</th>
-                            <th>Modifier</th>
-                            <th>Supprimer</th>
+                            <th class="text-center">Modifier</th>
+                            <th class="text-center">Supprimer</th>
                         </tr>
                         </thead>
                         <tfoot>
@@ -134,8 +134,8 @@
                             <th>Diplôme</th>
                             <th>Filiére</th>
                             <th>Année</th>
-                            <th>Modifier</th>
-                            <th>Supprimer</th>
+                            <th class="text-center">Modifier</th>
+                            <th class="text-center">Supprimer</th>
                         </tr>
                         </tfoot>
                         <tbody>
@@ -151,11 +151,11 @@
                                         <td>{{ filiere.nom }}</td>
                                         <td>{{ filiere.annee }}</td>
 
-                                        <td>
-                                            <a href="{{ path('prof_set', {'id': prof.id}) }}">edit</a>
+                                        <td class="text-center">
+                                            <a href="{{ path('prof_set', {'id': prof.id}) }}"><i class="far fa-edit"></i></a>
                                         </td>
-                                        <td>
-                                            <a href="{{ path('prof_remove', {'id': prof.id}) }}">remove</a>
+                                        <td class="text-center">
+                                            <a href="{{ path('prof_remove', {'id': prof.id}) }}"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -169,11 +169,11 @@
                                     <td></td>
                                     <td></td>
 
-                                    <td>
-                                        <a href="{{ path('prof_set', {'id': prof.id}) }}">edit</a>
+                                    <td class="text-center">
+                                        <a href="{{ path('prof_set', {'id': prof.id}) }}"><i class="far fa-edit"></i></a>
                                     </td>
-                                    <td>
-                                        <a href="{{ path('prof_remove', {'id': prof.id}) }}">remove</a>
+                                    <td class="text-center">
+                                        <a href="{{ path('prof_remove', {'id': prof.id}) }}"><i class="fas fa-trash"></i></a>
                                     </td>
                                 </tr>
                             {% endif %}

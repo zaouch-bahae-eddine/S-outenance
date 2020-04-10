@@ -86,8 +86,8 @@
                             <th>duree</th>
                             <th>capacite</th>
                             <th>salle</th>
-                            <th>Modifier</th>
-                            <th>Supprimer</th>
+                            <th class="text-center">Modifier</th>
+                            <th class="text-center">Supprimer</th>
                         </tr>
                         </thead>
                         <tfoot>
@@ -97,8 +97,8 @@
                             <th>duree</th>
                             <th>capacite</th>
                             <th>salle</th>
-                            <th>Modifier</th>
-                            <th>Supprimer</th>
+                            <th class="text-center">Modifier</th>
+                            <th class="text-center">Supprimer</th>
                         </tr>
                         </tfoot>
                         <tbody>
@@ -110,11 +110,11 @@
                                     <td>{{ creneau.duree }}</td>
                                     <td>{{ creneau.capacite }}</td>
                                     <td></td>
-                                    <td>
-                                        <a href="{{ path('soutenance_creneau_set', {'id': idSoutenance, 'creneau': creneau.id}) }}">edit</a>
+                                    <td class="text-center">
+                                        <a href="{{ path('soutenance_creneau_set', {'id': idSoutenance, 'creneau': creneau.id}) }}"><i class="far fa-edit"></i></a>
                                     </td>
-                                    <td>
-                                        <a href="{{ path('soutenance_creneau_remove', {'id': idSoutenance, 'creneau': creneau.id}) }}">remove</a>
+                                    <td class="text-center">
+                                        <a href="{{ path('soutenance_creneau_remove', {'id': idSoutenance, 'creneau': creneau.id}) }}"><i class="fas fa-trash"></i></a>
                                     </td>
                             {% else %}
                                     {% for salle in creneau.salles %}
@@ -124,11 +124,11 @@
                                             <td>{{ creneau.duree }}</td>
                                             <td>{{ creneau.capacite }}</td>
                                             <td>{{ salle.nom }}</td>
-                                        <td>
-                                            <a href="{{ path('soutenance_creneau_set', {'id': idSoutenance, 'creneau': creneau.id}) }}">edit</a>
+                                        <td class="text-center">
+                                            <a href="{{ path('soutenance_creneau_set', {'id': idSoutenance, 'creneau': creneau.id}) }}"><i class="far fa-edit"></i></a>
                                         </td>
-                                        <td>
-                                            <a href="{{ path('soutenance_creneau_remove', {'id': idSoutenance, 'creneau': creneau.id}) }}">remove</a>
+                                        <td class="text-center">
+                                            <a href="{{ path('soutenance_creneau_remove', {'id': idSoutenance, 'creneau': creneau.id}) }}"><i class="fas fa-trash"></i></a>
                                         </td>
                                     {% endfor %}
 

@@ -73,8 +73,8 @@
                         <th>Nom</th>
                         <th>Etage</th>
                         <th>Capacite</th>
-                        <th>Modifier</th>
-                        <th>Supprimer</th>
+                        <th class="text-center">Modifier</th>
+                        <th class="text-center">Supprimer</th>
                     </tr>
                     </thead>
                     <tfoot>
@@ -82,8 +82,8 @@
                         <th>Nom</th>
                         <th>Etage</th>
                         <th>Capacite</th>
-                        <th>Modifier</th>
-                        <th>Supprimer</th>
+                        <th class="text-center">Modifier</th>
+                        <th class="text-center">Supprimer</th>
                     </tr>
                     </tfoot>
                     <tbody>
@@ -94,11 +94,11 @@
                             <td>{{ salle.etage }}</td>
                             <td>{{ salle.capacite }}</td>
 
-                            <td>
-                                <a href="{{ path('salle_set',{'id': salle.id}) }}">editer</a>
+                            <td class="text-center">
+                                <a href="{{ path('salle_set',{'id': salle.id}) }}"><i class="far fa-edit"></i></a>
                             </td>
-                            <td>
-                                <a href="{{ path('salle_remove',{'id': salle.id}) }}">remove</a>
+                            <td class="text-center">
+                                <a href="{{ path('salle_remove',{'id': salle.id}) }}"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>
                     {% endfor %}

@@ -225,6 +225,7 @@ class SoutenanceController extends AbstractController
         $evaluateurs = $soutenance->getEvaluateurs();
 
         $rep = $this->em->getRepository(Note::class);
+        $tab = null;
         foreach ($etudiants as $etudiant){
             foreach ($evaluateurs as $evaluateur){
                 if($all){
@@ -279,6 +280,7 @@ class SoutenanceController extends AbstractController
             $all = false;
         $etudiants = $soutenance->getModule()->getFiliere()->getEtudiants();
         $rep = $this->em->getRepository(Rendu::class);
+        $rendus = null;
         foreach ($etudiants as $etudiant){
             $rendu = $rep->findBy(['soutenance'=>$soutenance,'etudiant' => $etudiant]);
                     $rendus[$etudiant->getId()] = $rendu;

@@ -41,7 +41,10 @@ class SoutenanceBaseFormType extends AbstractType
         }
         $builder
             ->add('nom',null, ["attr"=>["class"=>"form-control"]])
-            ->add('alerte', DateTimeType::class, ["attr"=>["class"=>"form-control"]])
+            ->add('alerte', DateTimeType::class, [
+                "attr"=>["class"=>"form-control"],
+                "required" => false,
+                ])
             ->add('module', EntityType::class, [
                 'class' => Module::class,
                 'choices' => $modulesProf,

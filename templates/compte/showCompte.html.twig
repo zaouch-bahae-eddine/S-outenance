@@ -17,6 +17,7 @@
                             <div class="p-5">
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Changer Mon mot de passe !</h1>
+                                    <h6 class="h4 text-gray-600 mb-4">{{ app.user.email }}</h6>
                                 </div>
                                 <form action="{{ path('set_compte') }}" method="post">
                                 <div class="form-group">

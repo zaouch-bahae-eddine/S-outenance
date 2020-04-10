@@ -73,26 +73,26 @@
                         <thead>
                         <tr>
                             <th>Libellé</th>
-                            <th>Modifier</th>
-                            <th>Supprimer</th>
+                            <th class="text-center">Modifier</th>
+                            <th class="text-center">Supprimer</th>
                         </tr>
                         </thead>
                         <tfoot>
                         <tr>
                             <th>Libellé</th>
-                            <th>Modifer</th>
-                            <th>Supprimer</th>
+                            <th class="text-center">Modifer</th>
+                            <th class="text-center">Supprimer</th>
                         </tr>
                         </tfoot>
                         <tbody>
                         {% for diplome in diplomes %}
                             <tr>
                                 <td>{{ diplome.nom }}</td>
-                                <td>
-                                    <a href="{{ path('diplome_set',{'id': diplome.id}) }}">editer</a>
+                                <td class="text-center">
+                                    <a href="{{ path('diplome_set',{'id': diplome.id}) }}"><i class="far fa-edit"></i></a>
                                 </td>
-                                <td>
-                                    <a href="{{ path('diplome_remove',{'id': diplome.id}) }}">remove</a>
+                                <td class="text-center">
+                                    <a href="{{ path('diplome_remove',{'id': diplome.id}) }}"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
                         {% endfor %}

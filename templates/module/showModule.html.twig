@@ -78,8 +78,8 @@
                             <th>Diplôme</th>
                             <th>Filière</th>
                             <th>Année</th>
-                            <th>Modifier</th>
-                            <th>Supprimer</th>
+                            <th class="text-center">Modifier</th>
+                            <th class="text-center">Supprimer</th>
                         </tr>
                         </thead>
                         <tfoot>
@@ -88,8 +88,8 @@
                             <th>Diplôme</th>
                             <th>Filière</th>
                             <th>Année</th>
-                            <th>Modifier</th>
-                            <th>Supprimer</th>
+                            <th class="text-center">Modifier</th>
+                            <th class="text-center">Supprimer</th>
                         </tr>
                         </tfoot>
                         <tbody>
@@ -102,11 +102,11 @@
                                 <td>{{ module.filiere.nom }}</td>
                                 <td>{{ module.filiere.annee }}</td>
 
-                                <td>
-                                    <a href="{{ path('module_set',{'id': module.id}) }}">editer</a>
+                                <td class="text-center">
+                                    <a href="{{ path('module_set',{'id': module.id}) }}"><i class="far fa-edit"></i></a>
                                 </td>
-                                <td>
-                                    <a href="{{ path('module_remove',{'id': module.id}) }}">remove</a>
+                                <td class="text-center">
+                                    <a href="{{ path('module_remove',{'id': module.id}) }}"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
                         {% endfor %}

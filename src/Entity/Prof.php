@@ -25,7 +25,7 @@ class Prof
     private $compte;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Soutenance", mappedBy="profs", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity="App\Entity\Soutenance", mappedBy="evaluateurs")
      */
     private $soutenances;
 

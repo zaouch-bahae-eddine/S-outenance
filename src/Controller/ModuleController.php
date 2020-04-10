@@ -93,10 +93,15 @@ class ModuleController extends AbstractController
     {
         if(!$module)
             throw new NotFoundHttpException('Auccune filière a supprimer');
+        $soutenances = $module->getSoutenances();
+        foreach ($soutenances as $soutenance){
+            $this->em->remove($soutenance);
+        }
+        $this->em->flush();
         $this->em->remove($module);
         $this->em->flush();
 
-        $this->addFlash('success', 'Modume supprimé');
+        $this->addFlash('success', 'Modume supprimé !');
         return $this->redirectToRoute('module_show');
     }
 }

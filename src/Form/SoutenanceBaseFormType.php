@@ -46,7 +46,7 @@ class SoutenanceBaseFormType extends AbstractType
                 'class' => Module::class,
                 'choices' => $modulesProf,
                 'choice_label' => function (Module $module){
-                    return sprintf('%s', $module->getNom());
+                    return sprintf('Module: %s, Filiére: %s, Année: %s', $module->getNom(), $module->getFiliere()->getNom(), $module->getFiliere()->getAnnee());
                 }
             ])
         ;

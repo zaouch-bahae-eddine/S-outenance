@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Prof;
+use App\Entity\Soutenance;
 use App\Entity\Utilisateur;
 use App\Form\GenerationMailFormType;
 use App\Form\ProfFormType;
@@ -126,12 +127,30 @@ class ProfController extends AbstractController
     {
         if(!$prof)
             throw new NotFoundHttpException('Auccun enseignanat a supprimer');
-        $this->em->remove($prof);
-        $this->em->remove($prof->getCompte());
+        $deathProf = $prof;
+        $rep = $this->em->getRepository(Soutenance::class);
 
+        $soutenances = $rep->findBy(['prof'=> $prof]);
+        foreach ($soutenances as $soutenance){
+            $rendus = $soutenance->getRendus();
+            foreach ($rendus as $rendu){
+                $path = $rendu->getRendu();
+                $this->em->remove($rendu);
+                $this->em->flush();
+                if(file_exists($this->getParameter('rendu_directory').$path)
+                    &&
+                    $this->getParameter('rendu_directory')!=$this->getParameter('rendu_directory').$path){
+                    unlink($this->getParameter('rendu_directory').$path);
+                }
+            }
+            $this->em->remove($soutenance);
+            $this->em->flush();
+        }
+        $this->em->remove($prof);
+        $this->em->remove($deathProf->getCompte());
         $this->em->flush();
 
-        $this->addFlash('success', 'Enseignant supprimé');
+        $this->addFlash('success', 'Enseignant supprimé !');
         return $this->redirectToRoute('prof_show');
     }
     /**

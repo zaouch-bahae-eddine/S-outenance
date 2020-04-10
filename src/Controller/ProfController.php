@@ -192,7 +192,7 @@ class ProfController extends AbstractController
             }
             $this->em->flush();
             if($i>0)
-                $this->addFlash('success', $i.' Comptes a été génerer Comptes a été génerer et envoyer aux adresse mail personelle de chaqu\'un');
+                $this->addFlash('success', $i.' Comptes ont été générés et envoyés aux adresses personnelles');
         }
         return $this->redirectToRoute('prof_show');
     }

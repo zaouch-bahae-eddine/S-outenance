@@ -169,7 +169,7 @@ class EtudiantController extends AbstractController
             }
             $this->em->flush();
             if($i>0)
-            $this->addFlash('success', $i.' Comptes a été génerer et envoyer aux adresses personnelles');
+            $this->addFlash('success', $i.' Comptes ont été générés et envoyés aux adresses personnelles');
         }
         return $this->redirectToRoute('etudiant_show');
     }

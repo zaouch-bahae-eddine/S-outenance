@@ -14,9 +14,9 @@ class UtilisateurFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom')
-            ->add('prenom')
-            ->add('email');
+            ->add('nom',null,["attr"=>["class"=>"form-control"]])
+            ->add('prenom', null,["attr"=>["class"=>"form-control"]])
+            ->add('email',null,["attr"=>["class"=>"form-control"]]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

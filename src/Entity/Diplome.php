@@ -24,7 +24,7 @@ class Diplome
     private $nom;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Filiere", mappedBy="diplome", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Filiere", mappedBy="diplome")
      */
     private $filieres;
 

@@ -3,7 +3,11 @@
 {% block title %}Gestion Enseiganat{% endblock %}
 
 {% block content %}
-
+    <style>
+        .hide-zmr{
+            display: none;
+        }
+    </style>
     <!-- Modal Génération des comptes-->
     <div class="modal fade" id="generateCompteModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -44,6 +48,9 @@
                     {{ form_row(profForm.prenom) }}
                     {{ form_row(profForm.mailPerso) }}
                     {{ form_row(profForm.filiere) }}
+                    <div class="hide-zmr">
+                        {{ form_row(profForm.email) }}
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -133,24 +140,43 @@
                         </tfoot>
                         <tbody>
                         {% for prof in profs %}
-                            {% for filiere in prof.filieres %}
-                            <tr>
-                                <td>{{ prof.compte.nom }}</td>
-                                <td>{{ prof.compte.prenom }}</td>
-                                <td>{{ prof.compte.mailPerso }}</td>
-                                <td>{{ prof.compte.email }}</td>
-                                <td>{{ filiere.diplome.nom }}</td>
-                                <td>{{ filiere.nom }}</td>
-                                <td>{{ filiere.annee }}</td>
+                            {% if prof.filieres|length != 0 %}
+                                {% for filiere in prof.filieres %}
+                                    <tr>
+                                        <td>{{ prof.compte.nom }}</td>
+                                        <td>{{ prof.compte.prenom }}</td>
+                                        <td>{{ prof.compte.mailPerso }}</td>
+                                        <td>{{ prof.compte.email }}</td>
+                                        <td>{{ filiere.diplome.nom }}</td>
+                                        <td>{{ filiere.nom }}</td>
+                                        <td>{{ filiere.annee }}</td>
 
-                                <td>
-                                    <a href="{{ path('prof_set', {'id': prof.id}) }}">edit</a>
-                                </td>
-                                <td>
-                                    <a href="{{ path('prof_remove', {'id': prof.id}) }}">remove</a>
-                                </td>
-                            </tr>
+                                        <td>
+                                            <a href="{{ path('prof_set', {'id': prof.id}) }}">edit</a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ path('prof_remove', {'id': prof.id}) }}">remove</a>
+                                        </td>
+                                    </tr>
                                 {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td>{{ prof.compte.nom }}</td>
+                                    <td>{{ prof.compte.prenom }}</td>
+                                    <td>{{ prof.compte.mailPerso }}</td>
+                                    <td>{{ prof.compte.email }}</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+
+                                    <td>
+                                        <a href="{{ path('prof_set', {'id': prof.id}) }}">edit</a>
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('prof_remove', {'id': prof.id}) }}">remove</a>
+                                    </td>
+                                </tr>
+                            {% endif %}
                         {% endfor %}
                         </tbody>
                     </table>

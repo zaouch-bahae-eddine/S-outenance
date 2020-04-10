@@ -36,6 +36,7 @@ class Prof
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Filiere", mappedBy="prof")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $filieres;
 

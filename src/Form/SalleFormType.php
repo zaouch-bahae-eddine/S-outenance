@@ -12,9 +12,9 @@ class SalleFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom')
-            ->add('etage')
-            ->add('capacite')
+            ->add('nom',null, ["attr"=>["class"=>"form-control"]])
+            ->add('etage',null, ["attr"=>["class"=>"form-control"]])
+            ->add('capacite',null, ["attr"=>["class"=>"form-control"]])
         ;
     }
 

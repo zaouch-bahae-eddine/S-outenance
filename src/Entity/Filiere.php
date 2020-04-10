@@ -24,7 +24,7 @@ class Filiere
     private $nom;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Module", mappedBy="filiere", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Module", mappedBy="filiere")
      */
     private $modules;
 
@@ -40,7 +40,7 @@ class Filiere
     private $annee;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Etudiant", mappedBy="filiere", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Etudiant", mappedBy="filiere")
      */
     private $etudiants;
 
@@ -182,5 +182,8 @@ class Filiere
         }
 
         return $this;
+    }
+    public function removeAllProfs(){
+        $this->prof = null;
     }
 }

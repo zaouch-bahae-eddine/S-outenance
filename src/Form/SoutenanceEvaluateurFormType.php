@@ -35,6 +35,7 @@ class SoutenanceEvaluateurFormType extends AbstractType
                 'class' => Prof::class,
                 'multiple' => true,
                 'required' => false,
+                "attr"=>["class"=>"form-control"],
                 'choices' => $this->em->getRepository(Prof::class)->findOtherProfs($this->security->getUser()->getProf()->getId()),
                 'choice_label' => function(Prof $prof){
                         return sprintf('%s %s', $prof->getCompte()->getNom(), $prof->getCompte()->getPrenom());

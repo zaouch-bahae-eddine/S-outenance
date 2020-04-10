@@ -40,11 +40,12 @@ class SoutenanceBaseFormType extends AbstractType
             }
         }
         $builder
-            ->add('nom')
-            ->add('alerte', DateTimeType::class)
+            ->add('nom',null, ["attr"=>["class"=>"form-control"]])
+            ->add('alerte', DateTimeType::class, ["attr"=>["class"=>"form-control"]])
             ->add('module', EntityType::class, [
                 'class' => Module::class,
                 'choices' => $modulesProf,
+                "attr"=>["class"=>"form-control"],
                 'choice_label' => function (Module $module){
                     return sprintf('Module: %s, Filiére: %s, Année: %s', $module->getNom(), $module->getFiliere()->getNom(), $module->getFiliere()->getAnnee());
                 }

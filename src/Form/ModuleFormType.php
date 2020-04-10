@@ -18,13 +18,14 @@ class ModuleFormType extends AbstractType
     {
 
         $builder
-            ->add('nom', TextType::class)
+            ->add('nom', TextType::class, ["attr"=>["class"=>"form-control"]])
             ->add('filiere', EntityType::class, [
                 'class' => Filiere::class,
                 'choice_label' => function(Filiere $filiere){
                     return sprintf('%s %s %s', $filiere->getDiplome()->getNom(), $filiere->getAnnee(), $filiere->getNom());
                 },
                 'placeholder' => 'Filière',
+                "attr"=>["class"=>"form-control"],
             ])
             ;
     }

@@ -94,10 +94,43 @@ class FiliereController extends AbstractController
     {
         if(!$filiere)
             throw new NotFoundHttpException('Auccune filière a supprimer');
+        $etudiants = $filiere->getEtudiants();
+        $profs = $filiere->getProf();
+        foreach ($etudiants as $etudiant){
+            $etudiant->setFiliere(null);
+            $this->em->persist($etudiant);
+        }
+        foreach ($profs as $prof){
+            $prof->removeFiliere($filiere);
+            $this->em->persist($prof);
+        }
+        $this->em->flush();
+        $modules = $filiere->getModules();
+        foreach ($modules as $module){
+            $soutenances = $module->getSoutenances();
+            foreach ($soutenances as $soutenance){
+                $rendus = $soutenance->getRendus();
+                foreach ($rendus as $rendu){
+                    $path = $rendu->getRendu();
+                    $this->em->remove($rendu);
+                    $this->em->flush();
+                    if(file_exists($this->getParameter('rendu_directory').$path)
+                        &&
+                        $this->getParameter('rendu_directory')!=$this->getParameter('rendu_directory').$path){
+                        unlink($this->getParameter('rendu_directory').$path);
+                    }
+
+                }
+                $this->em->remove($soutenance);
+            }
+            $this->em->flush();
+            $this->em->remove($module);
+            $this->em->flush();
+        }
         $this->em->remove($filiere);
         $this->em->flush();
 
-        $this->addFlash('success', 'Filière supprimé');
+        $this->addFlash('success', 'Filière supprimé !');
         return $this->redirectToRoute('filiere_show');
     }
 }

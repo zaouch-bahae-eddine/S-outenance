@@ -12,7 +12,7 @@ class GenerationMailFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('Suffix', TextType::class)
+            ->add('Suffix', TextType::class, ["attr"=>["class"=>"form-control"]])
         ;
     }
 

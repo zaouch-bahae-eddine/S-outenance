@@ -3,6 +3,11 @@
 {% block title %}Hello EtudiantController!{% endblock %}
 
 {% block content %}
+    <style>
+        .hide-zmr{
+            display: none;
+        }
+    </style>
     <!-- Modal Génération des comptes-->
     <div class="modal fade" id="generateCompteModele" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -43,6 +48,9 @@
                     {{ form_row(etudiantForm.prenom) }}
                     {{ form_row(etudiantForm.mailPerso) }}
                     {{ form_row(etudiantForm.filiere) }}
+                    <div class="hide-zmr">
+                        {{ form_row(etudiantForm.email, {'attr': {'class': 'hide-zmr'}}) }}
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -136,10 +144,15 @@
                                 <td>{{ etudiant.compte.prenom }}</td>
                                 <td>{{ etudiant.compte.mailPerso }}</td>
                                 <td>{{ etudiant.compte.email }}</td>
-                                <td>{{ etudiant.filiere.diplome.nom }}</td>
-                                <td>{{ etudiant.filiere.nom }}</td>
-                                <td>{{ etudiant.filiere.annee }}</td>
-
+                                {% if etudiant.filiere != null %}
+                                    <td>{{ etudiant.filiere.diplome.nom }}</td>
+                                    <td>{{ etudiant.filiere.nom }}</td>
+                                    <td>{{ etudiant.filiere.annee }}</td>
+                                {% else %}
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                {% endif %}
                                 <td>
                                     <a href="{{ path('etudiant_set', {'id': etudiant.id}) }}">edit</a>
                                 </td>

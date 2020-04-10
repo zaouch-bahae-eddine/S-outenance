@@ -42,7 +42,7 @@ class Etudiant
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Filiere", inversedBy="etudiants")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $filiere;
 

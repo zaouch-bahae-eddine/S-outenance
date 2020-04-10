@@ -15,21 +15,24 @@ class ProfFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('nom',TextType::class)
-            ->add('prenom',TextType::class)
-            ->add('mailPerso',EmailType::class)
+        $builder->add('nom',TextType::class, ["attr"=>["class"=>"form-control"]])
+            ->add('prenom',TextType::class, ["attr"=>["class"=>"form-control"]])
+            ->add('mailPerso',EmailType::class, ["attr"=>["class"=>"form-control"]])
             ->add('email', EmailType::class,[
                 'required' => false,
-                'empty_data' => ""
+                'empty_data' => "",
+                "attr"=>["class"=>"form-control"],
             ])
             ->add('filiere', EntityType::class,[
                 'mapped' => false,
+                'required' =>false,
                 'placeholder' => 'Filière',
                 'class' => Filiere::class,
                 'choice_label' => function(Filiere $filiere){
                     return sprintf("%s %s %s", $filiere->getDiplome()->getNom(), $filiere->getNom(), $filiere->getAnnee());
                 },
                 'multiple' => true,
+                "attr"=>["class"=>"form-control"],
             ]);
     }
 

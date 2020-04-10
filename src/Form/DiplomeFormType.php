@@ -15,7 +15,7 @@ class DiplomeFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom', TextType::class);
+            ->add('nom', TextType::class,["attr"=>["class"=>"form-control"]]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -23,15 +23,19 @@ class FiliereFormType extends AbstractType
 
         $builder
             ->add('nom',TextType::class, [
-            'label' => 'Nom Filière'])
+                'label' => 'Nom Filière',
+                "attr"=>["class"=>"form-control"],
+                ])
             ->add('diplome', EntityType::class, [
                 'class' => Diplome::class,
                 'choice_label' => 'nom',
                 'placeholder' => 'Diplome',
+                "attr"=>["class"=>"form-control"],
             ])
             ->add('annee',ChoiceType::class,[
                 'choices' => $annees,
                 'placeholder' => 'Année',
+                "attr"=>["class"=>"form-control"],
             ] )
         ;
     }

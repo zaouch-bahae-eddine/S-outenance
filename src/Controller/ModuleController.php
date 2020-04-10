@@ -95,6 +95,18 @@ class ModuleController extends AbstractController
             throw new NotFoundHttpException('Auccune filière a supprimer');
         $soutenances = $module->getSoutenances();
         foreach ($soutenances as $soutenance){
+            $rendus = $soutenance->getRendus();
+            foreach ($rendus as $rendu){
+                $path = $rendu->getRendu();
+                $this->em->remove($rendu);
+                $this->em->flush();
+                if(file_exists($this->getParameter('rendu_directory').$path)
+                    &&
+                    $this->getParameter('rendu_directory')!=$this->getParameter('rendu_directory').$path){
+                    unlink($this->getParameter('rendu_directory').$path);
+                }
+
+            }
             $this->em->remove($soutenance);
         }
         $this->em->flush();

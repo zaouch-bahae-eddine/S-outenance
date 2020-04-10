@@ -96,6 +96,46 @@ class DiplomeController extends AbstractController
     {
         if(!$diplome)
             throw new NotFoundHttpException('Auccun diplome a supprimer');
+        $filieres = $diplome->getFilieres();
+        foreach ($filieres as $filiere){
+            $etudiants = $filiere->getEtudiants();
+            foreach ($etudiants as $etudiant){
+                $etudiant->setFiliere(null);
+                $this->em->persist($etudiant);
+            }
+
+            $profs = $filiere->getProf();
+            foreach ($profs as $prof){
+                $prof->removeFiliere($filiere);
+                $this->em->persist($prof);
+            }
+            $filiere->removeAllProfs();
+            $this->em->flush();
+
+            $modules = $filiere->getModules();
+            foreach ($modules as $module){
+                $soutenances = $module->getSoutenances();
+                foreach ($soutenances as $soutenance){
+                    $rendus = $soutenance->getRendus();
+                    foreach ($rendus as $rendu){
+                        $path = $rendu->getRendu();
+                        $this->em->remove($rendu);
+                        $this->em->flush();
+                        if(file_exists($this->getParameter('rendu_directory').$path)
+                            &&
+                            $this->getParameter('rendu_directory')!=$this->getParameter('rendu_directory').$path){
+                            unlink($this->getParameter('rendu_directory').$path);
+                        }
+                    }
+                    $this->em->remove($soutenance);
+                }
+                $this->em->flush();
+                $this->em->remove($module);
+                $this->em->flush();
+            }
+            $this->em->remove($filiere);
+            $this->em->flush();
+        }
         $this->em->remove($diplome);
         $this->em->flush();
 

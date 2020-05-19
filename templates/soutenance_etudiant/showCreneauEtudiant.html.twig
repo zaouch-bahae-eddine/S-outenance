@@ -40,7 +40,7 @@
                         {% for creneau in creneaus %}
                             {% if creneau.salles|length == 0 %}
                                 <tr>
-                                <td>{{ creneau.date|date("m/d/Y") }}</td>
+                                <td>{{ creneau.date|date("d/m/Y") }}</td>
                                 <td>{{ creneau.heure|date('H:i') }}</td>
                                 <td>{{ creneau.duree }}</td>
                                 <td>{{ creneau.capacite }}</td>
@@ -51,7 +51,7 @@
                             {% else %}
                                 {% for salle in creneau.salles %}
                                     <tr>
-                                    <td>{{ creneau.date|date("m/d/Y") }}</td>
+                                    <td>{{ creneau.date|date("d/m/Y") }}</td>
                                     <td>{{ creneau.heure|date('H:i') }}</td>
                                     <td>{{ creneau.duree }}</td>
                                     <td>{{ creneau.capacite }}</td>

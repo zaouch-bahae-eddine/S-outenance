@@ -13,6 +13,8 @@ class HomePageController extends AbstractController
     public function index()
     {
         $user = $this->getUser();
+        if($user == null)
+            return $this->render('index/index.html.twig');
         if($user->getProf() != null)
             return $this->redirectToRoute('soutenance_show');
         if($user->getAdmin() != null)

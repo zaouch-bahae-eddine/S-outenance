@@ -1,0 +1,163 @@
+{% block index %}
+    <!DOCTYPE html>
+    <!-- saved from url=(0052)https://getbootstrap.com/docs/4.0/examples/carousel/ -->
+    <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style id="stndz-style"></style>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="gestion des Soutenances">
+        <meta name="author" content="Bahae eddine ZAOUCH">
+
+        <title>Soutenance</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="{{ asset('./Carousel Template for Bootstrap_files/bootstrap.min.css') }}" rel="stylesheet">
+        <!-- My css -->
+
+        <link href="{{ asset('./css/index-b.css') }}" rel="stylesheet">
+    </head>
+    <body>
+
+    <header>
+        <nav class="navbar navbar-expand-md fixed-top bg-dark nav-b">
+            <a class="navbar-brand" href="#"><img src="{{ asset('img/logo3.png') }}" alt="logo" style="height: 50px;"/></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </nav>
+    </header>
+
+    <div class="header-b">
+        <div class="bg-header bg-header-img"></div>
+        <div class="bg-header "></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 header-title">
+                    <h1 id="pg-title">Gestion Des Soutenances</h1>
+                    <p id="pg-sub-title">Gérez vos soutenance efficacement</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="myCards">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <!--card-->
+                    <div class="item-b-content">
+                        <div class="img-card">
+                            <img src="{{ asset('./icone/gear_color.png')}}" alt=""/>
+                        </div>
+                        <h6>Génération automatique des comptes</h6>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <!--card-->
+                    <div class="item-b-content">
+                        <div class="img-card">
+                            <img src="{{ asset('./icone/date.png')}}" alt=""/>
+                        </div>
+                        <h6>Organiser des soutenances</h6>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <!--card-->
+                    <div class="item-b-content">
+                        <div class="img-card">
+                            <img src="{{ asset('./icone/note.png')}}" alt=""/>
+                        </div>
+                        <h6>Evaluer les soutenances et les rendus</h6>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <!--card-->
+                    <div class="item-b-content">
+                        <div class="img-card">
+                            <img src="{{ asset('./icone/sheet.png')}}" alt=""/>
+                        </div>
+                        <h6>Générer le planning des soutenances</h6>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="comencer">
+        <div class="row">
+            <div class="col-xs-12">
+                <p class="comencer-phrase">N'hésitez pas de faire un test c'est trés simple<br/></p>
+            </div>
+        </div>
+
+        <div class="ballon"></div>
+        <div class="row">
+            <div class="col-xs-12">
+                <a href="{{ path('show_login') }}"><span>Commencant</span></a>
+            </div>
+        </div>
+    </div>
+
+    <div id="user-info">
+        <div class="container">
+            <div class="row">
+                <h3 id="title-user-info">Types d'utilisateurs</h3>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-12">
+                    <div class="item-b-content small-height">
+                        <div class="img-card">
+                            <img src="{{ asset('./icone/admin.png')}}" alt=""/>
+                        </div>
+                        <h6 class="user-info-title">Administrateur</h6>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <div class="item-b-content small-height">
+                        <div class="img-card">
+                            <img src="{{ asset('./icone/prof.png')}}" alt=""/>
+                        </div>
+                        <h6 class="user-info-title">Enseignant</h6>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <div class="item-b-content small-height">
+                        <div class="img-card">
+                            <img src="{{ asset('./icone/student.png')}}" alt=""/>
+                        </div>
+                        <h6 class="user-info-title" >Etudiant</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="footer-bg">
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <img src="{{ asset('img/logo3.png') }}" alt="logo" style="height: 55px;margin: 30px auto;"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <!--
+                    <div class="col-6 col-sm-6">
+                        <a href="https://github.com/zaouch-bahae-eddine" id="right-b" class="style-circle" target="_blank"><img src="{{ asset('./icone/git.png')}}" alt=""></a>
+                    </div>
+                    <div class="col-6 col-sm-6">
+                        <a href="https://www.linkedin.com/in/bahae-eddine-zaouch-260b6a199/" id="left-b"class="style-circle" target="_blank"><img src="{{ asset('./icone/link.png')}}" alt="" ></a>
+                    </div>
+                    -->
+                    <div class="col-12">
+                        <p id="copy-right">Copyright © 2020</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500" preserveAspectRatio="none" style="display: none; visibility: hidden; position: absolute; top: -100%; left: -100%;"><defs><style type="text/css"></style></defs><text x="0" y="25" style="font-weight:bold;font-size:25pt;font-family:Arial, Helvetica, Open Sans, sans-serif">500x500</text></svg></body></html>
+{% endblock %}
